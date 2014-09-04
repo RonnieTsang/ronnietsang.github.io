@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[RonnieTsang's Blog]]></title>
-  <link href="http://RonnieTsang.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Github | RonnieTsang's Blog]]></title>
+  <link href="http://RonnieTsang.github.io/blog/categories/github/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
   <updated>2014-09-05T01:55:39+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
@@ -40,29 +40,21 @@
 
 <p><strong>搭建 Octopress 环境</strong></p>
 
-<p>(1) 安装 Octopress</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git://github.com/imathis/octopress.git octopress
-</span><span class='line'>$ cd octopress</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(2) 安装相关依赖</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gem install bundler
-</span><span class='line'>$ rbenv rehash
-</span><span class='line'>$ bundle install</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(3) 安装默认的 Octopress 主题</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake install</span></code></pre></td></tr></table></div></figure>
-
+<p>(1) 安装 Octopress
+<code>
+$ git clone git://github.com/imathis/octopress.git octopress
+$ cd octopress
+</code>
+(2) 安装相关依赖
+<code>
+$ gem install bundler
+$ rbenv rehash
+$ bundle install
+</code>
+(3) 安装默认的 Octopress 主题
+<code>
+$ rake install
+</code></p>
 
 <p>参考：<a href="http://octopress.org/docs/setup/">Initial Setup</a></p>
 
@@ -84,29 +76,20 @@
 
 <p>(1) 创建博文</p>
 
-<p>Octopress 为我们提供了一些 task 来创建博文和页面。博文必须存储在 <code>source/_posts</code> 目录下，并且需要按照 Jekyll 的命名规范对文章进行命名：<code>YYYY-MM-DD-post-title.markdown</code>。文章的名字会被当做 <code>url</code> 的一部分，而其中的日期用于对博文的区分和排序。</p>
+<p>Octopress 为我们提供了一些 task 来创建博文和页面。博文必须存储在 <code>source/_posts</code> 目录下，并且需要按照 Jekyll 的命名规范对文章进行命名：<code>YYYY-MM-DD-post-title.markdown</code>。文章的名字会被当做 <code>url</code> 的一部分，而其中的日期用于对博文的区分和排序。
+<code>
+$ rake new_post["Hello Octopress"]
+</code>
+其中 <code>Hello Octopress</code> 为博文的文件名，创建出来的文件默认是 <code>markdown</code> 格式。上面的命令会创建出这样一个文件：<code>./source/_posts/2014-09-04-hello-octopress.markdown</code>。打开这个文件，可以看到里面有如下一些内容了 ( 告诉Jekyll博客引擎如何处理博文和页面 )：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake new_post["Hello Octopress"]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中 <code>Hello Octopress</code> 为博文的文件名，创建出来的文件默认是 <code>markdown</code> 格式。上面的命令会创建出这样一个文件：<code>./source/_posts/2014-09-04-hello-octopress.markdown</code>。打开这个文件，可以看到里面有如下一些内容了 ( 告诉Jekyll博客引擎如何处理博文和页面 )：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>---
-</span><span class='line'>layout: post
-</span><span class='line'>title: "Hello Octopress"
-</span><span class='line'>date: 2014-09-04 19:13:48 +0800
-</span><span class='line'>comments: true
-</span><span class='line'>categories:
-</span><span class='line'>---</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>---
+layout: post
+title: "Hello Octopress"
+date: 2014-09-04 19:13:48 +0800
+comments: true
+categories:
+---
+</code></pre>
 
 <p>(2) 编辑博文</p>
 
@@ -116,33 +99,24 @@
 
 <p>(3) 本地预览</p>
 
-<p>执行：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake preview</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后就能在浏览器中进行本地预览访问了： <code>http://127.0.0.1:4000/</code> 或 <code>http://localhost:4000/</code>，效果跟仓库中的一样。</p>
+<p>执行：
+<code>
+$ rake preview
+</code>
+然后就能在浏览器中进行本地预览访问了： <code>http://127.0.0.1:4000/</code> 或 <code>http://localhost:4000/</code>，效果跟仓库中的一样。</p>
 
 <p>(4) 完整过程</p>
 
-<p>下面是创建并部署博文的一个完整过程：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake new_post["Hello Octopress"]
-</span><span class='line'>$ rake generate
-</span><span class='line'>$ git add .
-</span><span class='line'>$ git commit -m 'My first blog -- Hello Octopress'
-</span><span class='line'>$ git push origin source
-</span><span class='line'>$ rake deploy</span></code></pre></td></tr></table></div></figure>
-
-
-<p>先 mark ，现在还无法部署博文，要等后面部署博客完毕再参考这个过程来部署博文。</p>
+<p>下面是创建并部署博文的一个完整过程：
+<code>
+$ rake new_post["Hello Octopress"]
+$ rake generate
+$ git add .
+$ git commit -m 'My first blog -- Hello Octopress'
+$ git push origin source
+$ rake deploy
+</code>
+先 mark ，现在还无法部署博文，要等后面部署博客完毕再参考这个过程来部署博文。</p>
 
 <p>参考：<a href="http://octopress.org/docs/blogging">Blogging Basics</a></p>
 
@@ -171,11 +145,10 @@
 
 <p>(2) 配置仓库</p>
 
-<p>一键配置：只需要利用 octopress 的一个配置 <code>rake</code> 任务就可以自动配置上面创建的仓库，超级方便：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake setup_github_pages</span></code></pre></td></tr></table></div></figure>
-
+<p>一键配置：只需要利用 octopress 的一个配置 <code>rake</code> 任务就可以自动配置上面创建的仓库，超级方便：
+<code>
+$ rake setup_github_pages
+</code></p>
 
 <p>这个命令会要求你输入刚刚创建的仓库的 <code>url</code> ( <code>ssh</code> or <code>https</code> url )，拷贝过来，回车，接下来它就干了这么几件事：</p>
 
@@ -190,15 +163,12 @@
 
 <p>(3) 部署仓库</p>
 
-<p>命令如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake generate
-</span><span class='line'>$ rake deploy</span></code></pre></td></tr></table></div></figure>
-
-
-<p>干了这么几件事：</p>
+<p>命令如下：
+<code>
+$ rake generate
+$ rake deploy
+</code>
+干了这么几件事：</p>
 
 <blockquote><ul>
 <li>生成博客文件，并拷贝至 _deploy 目录下</li>
@@ -206,15 +176,12 @@
 </ul>
 </blockquote>
 
-<p>不过博客的 <code>source</code> 需要单独提交，执行如下命令就可以将 <code>source</code> 提交到仓库的 <code>source</code> 分支下。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git add .
-</span><span class='line'>$ git commit -m 'Initial source commit'
-</span><span class='line'>$ git push origin source</span></code></pre></td></tr></table></div></figure>
-
+<p>不过博客的 <code>source</code> 需要单独提交，执行如下命令就可以将 <code>source</code> 提交到仓库的 <code>source</code> 分支下。
+<code>
+$ git add .
+$ git commit -m 'Initial source commit'
+$ git push origin source
+</code></p>
 
 <p>至此，博客已经完成基本的部署。但是当我满心期待地使用前面配置的 url 来访问时，直接来了一个冷冰冰的 <code>404</code>！好吧，莫慌，原来是有延迟，稍等几分钟(我等了半个钟&hellip;)，终于可以正常访问了！</p>
 
