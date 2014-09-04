@@ -8,44 +8,38 @@
     <priority>0.8</priority>
   </url>
   
-  <url>
-    <loc>http://RonnieTsang.github.io/blog/2014/04/22/a-sample-post/</loc>
-    <lastmod>2014-04-22T14:40:00+08:00</lastmod>
-    <priority>0.8</priority>
-  </url>
-  
   
   <url>
     <loc>http://RonnieTsang.github.io/blog/</loc>
-    <lastmod>2014-09-05T05:09:09+08:00</lastmod>
+    <lastmod>2014-09-05T05:14:47+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/archives/</loc>
-    <lastmod>2014-09-05T05:09:09+08:00</lastmod>
+    <lastmod>2014-09-05T05:14:47+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/blog/archives/</loc>
-    <lastmod>2014-09-05T05:09:09+08:00</lastmod>
+    <lastmod>2014-09-05T05:14:47+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/</loc>
-    <lastmod>2014-09-05T05:09:09+08:00</lastmod>
+    <lastmod>2014-09-05T05:14:47+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/about/</loc>
-    <lastmod>2014-09-05T05:09:09+08:00</lastmod>
+    <lastmod>2014-09-05T05:14:47+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
