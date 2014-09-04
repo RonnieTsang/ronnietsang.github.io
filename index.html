@@ -9,7 +9,7 @@
 
 <meta name="author" content="RonnieTsang"> 
 
-<meta name="description" content="想要有自己的博客这个想法很久很久了&hellip;行动上却很诚实，鄙视一下自己！ 2013-10-31 号申请的域名 lseek.me 一直闲置到现在，着实是暴殄天物！想当初好不容易才找到这个为数甚少的未被注册的 C 标准库函数名 lseek， 而且 lseek.me 刚好带有点 寻求自我 &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="业务背景 公司的数据分析业务 ETL 过程中，原始数据经过数据清洗之后，统一转换成自定义的 protobuf CustomEventMessage 格式，用户自定义事件 ( 多个KV对的格式 ) 保存在 event_args 字段中。最终 CustomEventMessage 数据将导入 &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -97,6 +97,516 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/09/05/writing-a-hive-generic-udf/">
+		
+			Writing a Hive Generic UDF</a>
+	</h2>
+	<div class="entry-content">
+		<h2>业务背景</h2>
+
+<p>公司的数据分析业务 ETL 过程中，原始数据经过数据清洗之后，统一转换成自定义的 protobuf <code>CustomEventMessage</code> 格式，用户自定义事件 ( 多个KV对的格式 ) 保存在 <code>event_args</code> 字段中。最终 <code>CustomEventMessage</code> 数据将导入 <code>hive</code> 中，在没有 <code>Protobuf Serde</code> 之前，这需要先将数据重新转换为文本格式。
+最后，在 <code>hive</code> 的建表语句中 <code>event_args</code> 字段声明为 <code>MAP</code> 类型：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">event_args</span> <span class="k">MAP</span><span class="o">&lt;</span><span class="nb">INT</span><span class="p">,</span> <span class="nb">INT</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">or</span>
+</span><span class='line'><span class="n">event_args</span> <span class="k">MAP</span><span class="o">&lt;</span><span class="n">STRING</span><span class="p">,</span> <span class="n">STRING</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>举例来说，某个 <code>event_args</code> 字段带有两个自定义参数 <code>money</code> 和 <code>paytype</code>，转换后的文本内容为：（ Key 1 和 3 是预定的 ）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="mi">1</span><span class="p">:</span><span class="mi">200</span><span class="o">|</span><span class="mi">3</span><span class="p">:</span><span class="mi">1</span>
+</span><span class='line'><span class="k">or</span>
+</span><span class='line'><span class="n">money</span><span class="p">:</span><span class="mi">200</span><span class="o">|</span><span class="n">paytype</span><span class="p">:</span><span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在后续 hive 查询脚本中引用该字段提取其中特定的事件（ 比如支付类型 <code>paytype</code> ）很简单且直观：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">event_args</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</span><span class='line'><span class="k">or</span>
+</span><span class='line'><span class="n">event_args</span><span class="p">[</span><span class="s1">&#39;paytype&#39;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>存在的问题及对策</h3>
+
+<p>多了转文本这一步骤，维护起来太繁琐，因此开发了 <strong>ProtobufSerde</strong> ，让 <code>hive</code> 能直接支持存取 <code>protobuf</code> 格式的数据，这样 <code>CustomEventMessage</code> 入库 hive 将会方便很多。</p>
+
+<p>当然，现在的 hive 程序也需要做一些相应的调整，比如上述 <code>event_args</code> 字段的读取就麻烦得多了。现在的建表语句变成如下形式（直接对应 proto）：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="n">event_args</span> <span class="nb">ARRAY</span><span class="o">&lt;</span> <span class="n">STRUCT</span><span class="o">&lt;</span><span class="n">key_int</span><span class="p">:</span><span class="nb">BIGINT</span><span class="p">,</span><span class="n">key_str</span><span class="p">:</span><span class="n">STRING</span><span class="p">,</span><span class="n">value_int</span><span class="p">:</span><span class="nb">BIGINT</span><span class="p">,</span><span class="n">value_str</span><span class="p">:</span><span class="n">STRING</span><span class="o">&gt;</span> <span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>select</code> 得到的数据格式将是类似这样的：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="p">[</span><span class="err">{</span><span class="ss">&quot;key_int&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;key_str&quot;</span><span class="p">:</span><span class="ss">&quot;money&quot;</span><span class="p">,</span><span class="ss">&quot;value_int&quot;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="ss">&quot;value_str&quot;</span><span class="p">:</span><span class="ss">&quot;200&quot;</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="ss">&quot;key_int&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="ss">&quot;key_str&quot;</span><span class="p">:</span><span class="ss">&quot;paytype&quot;</span><span class="p">,</span><span class="ss">&quot;value_int&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="ss">&quot;value_str&quot;</span><span class="p">:</span><span class="ss">&quot;1&quot;</span><span class="err">}</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在这里例子中，为了得到 <code>paytype</code>，我们可以在查询语句中这样书写：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span> <span class="n">event_args</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">value_int</span> <span class="k">FROM</span> <span class="n">s_CustomEventMessage</span> <span class="k">WHERE</span> <span class="n">pyearmonth</span><span class="o">=</span><span class="s1">&#39;201403&#39;</span> <span class="k">and</span> <span class="n">pday</span><span class="o">=</span><span class="s1">&#39;07&#39;</span> <span class="k">and</span> <span class="n">event_id</span><span class="o">=</span><span class="mi">30</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>引入的新问题</h3>
+
+<p>看起来依旧方便的这种写法，基于 <code>2</code> 个前提：</p>
+
+<blockquote><ul>
+<li><code>event_args</code> 中有 <code>paytype</code> 事件</li>
+<li><code>paytype</code> 自定义事件在 <code>event_args</code> 中是第 <code>2</code> 个 item（ index 1 ）</li>
+</ul>
+</blockquote>
+
+<p>遗憾的是，这两个条件都没有办法满足。因此现在需要通过 遍历整个 <code>event_args</code> 的内容，找出我们所关心的事件。
+OK，很明显，我们需要 <code>UDF</code> 来完成这一任务。</p>
+
+<hr />
+
+<h2>如何编写 Hive GenericUDF</h2>
+
+<p>为编写 UDF，Hive 中提供了两套不同的接口，分别是：</p>
+
+<blockquote><ul>
+<li>Simple API - <code>org.apache.hadoop.hive.ql.exec.UDF</code></li>
+<li>Complex API - <code>org.apache.hadoop.hive.ql.udf.generic.GenericUDF</code></li>
+</ul>
+</blockquote>
+
+<p><code>UDF</code> 接口非常容易编写，但其局限性在于它只适用于函数输入参数和返回值都是 <code>Java原生类型</code> 的场景，这里我们的输入参数类型是 <code>ARRAY&lt; STRUCT&lt;key_int:BIGINT,key_str:STRING,value_int:BIGINT,value_str:STRING&gt; &gt;</code>，返回值是 <code>BIGINT</code> 或者 <code>STRING</code> 类型，因此 <code>UDF</code> 接口满足不了需求。</p>
+
+<p>GenericUDF 是 Hive UDFs 中的 <strong>瑞士军刀</strong>，适用处理 Hive 的复杂类型如 <code>MAP</code>、<code>ARRAY</code>、<code>STRUCT</code> 以及在此之上的各种嵌套类型。下面我们就使用它来完成这一任务。</p>
+
+<h3>几点准备知识：</h3>
+
+<blockquote><ul>
+<li>UDF 函数通过 <code>ObjectInspector</code> 来访问传入的参数，因此 <code>ObjectInspector</code> 的概念很重要
+（对于 ObjectInspector 不太懂，等了解学习以后单独写个文档介绍）</li>
+<li>GenericUDFs 中使用的很多函数，特别是 <code>ObjectInspector</code> 的众多子类函数，返回 <code>Object</code> 类型，这意味着：
+（1） 编译器无法帮助我们做类型检查
+（2） 很多时候我们不知道拿到手的对象的实际类型（hadoop 的 tasklogs 是很有用的工具，可以借助它来调试）</li>
+</ul>
+</blockquote>
+
+<p>所有的自定义 <code>GenericUDFs</code> 继承自 <code>GenericUDF</code> 类，因此需要实现以下三个函数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="n">ObjectInspector</span> <span class="nf">initialize</span><span class="o">(</span><span class="n">ObjectInspector</span><span class="o">[]</span> <span class="n">arguments</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">Object</span> <span class="nf">evaluate</span><span class="o">(</span><span class="n">DeferredObject</span><span class="o">[]</span> <span class="n">arguments</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">String</span> <span class="nf">getDisplayString</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">children</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>1） initialize()函数</h3>
+
+<p>initialize() 函数在 UDF 第一次调用时执行，主要完成四件事：</p>
+
+<blockquote><ul>
+<li>检查输入参数类型（在我们的例子中，即 <code>array&lt;struct&lt;key_int:bigint,key_str:string,value_int:bigint,value_str:string&gt;&gt;</code> 和 <code>string</code>）</li>
+<li>设置并返回一个跟函数返回值匹配的 <code>ObjectInspector</code> 对象</li>
+<li>把输入参数中用到的各种 <code>ObjectInspectors</code> 保存到全局变量中</li>
+<li>设置返回值</li>
+</ul>
+</blockquote>
+
+<h3>2）evaluate() 函数</h3>
+
+<p>evaluate() 函数接收输入实参，完成计算后返回结果。如前所述，我们通过各种 <code>ObjectInspectors</code> 来访问传入的参数，<code>ObjectInspectors</code> 是由我们在 initialize() 函数中保存起来的。我们需要知道：</p>
+
+<blockquote><ul>
+<li>array&lt;> 在 Java 中用 ArrayList&lt;> 来表示</li>
+<li>struct&lt;> 在 Java 中用 Object[] 来表示</li>
+<li>使用 hadoop 的 Writable 和 Text 类而非 Java 原生类型</li>
+</ul>
+</blockquote>
+
+<h3>3） getDisplayString() 函数</h3>
+
+<p>不那么重要，我们只需返回一个字符串，表示该 UDF 是干什么的就行了，在我们使用 <code>EXPLAIN</code> 调试 <code>hql</code> 语句时，该信息会被输出。</p>
+
+<hr />
+
+<h2>代码实现</h2>
+
+<p>代码中已经有了详尽的注释来解释每一个步骤，可以参考着上面的内容来理解。不再详述。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">mjyun</span><span class="o">.</span><span class="na">hive</span><span class="o">.</span><span class="na">udf</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.io.Text</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.io.LongWritable</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.io.IntWritable</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.ql.exec.UDFArgumentException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.ql.exec.UDFArgumentLengthException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.ql.metadata.HiveException</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.ql.udf.generic.GenericUDF</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector.Category</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.ListObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.StandardListObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.ObjectInspectorFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.StructField</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.primitive.StringObjectInspector</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.objectinspector.primitive.LongObjectInspector</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.lazy.LazyString</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">org.apache.hadoop.hive.serde2.lazy.LazyLong</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">UDFGetValueFromEventArgsStr</span> <span class="kd">extends</span> <span class="n">GenericUDF</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Global variables that inspect the input.</span>
+</span><span class='line'>    <span class="c1">// These are set up during the initialize() call, and are then used during the calls to evaluate()</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ListObjectInspector</span>   <span class="n">listOI</span><span class="o">;</span>                   <span class="c1">// ObjectInspector for the list (array&lt;&gt;)</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">StructObjectInspector</span> <span class="n">structOI</span><span class="o">;</span>                 <span class="c1">// ObjectInspector for the struct&lt;&gt;</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">ObjectInspector</span>       <span class="n">kiOI</span><span class="o">,</span> <span class="n">ksOI</span><span class="o">,</span> <span class="n">viOI</span><span class="o">,</span> <span class="n">vsOI</span><span class="o">;</span>   <span class="c1">// ObjectInspector for the elements of the struct&lt;&gt;: key_int, key_str, value_int, value_str</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="n">StringObjectInspector</span> <span class="n">targetOI</span><span class="o">;</span>                 <span class="c1">// ObjectInspector for the second arg that we match with target field</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getDisplayString</span> <span class="o">(</span> <span class="n">String</span> <span class="o">[]</span><span class="n">arg0</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="s">&quot;getValueFromEventArgsStr&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// this is like the evaluate method of the simple API. </span>
+</span><span class='line'>    <span class="c1">// It takes the actual arguments and returns the result.</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">ObjectInspector</span> <span class="nf">initialize</span> <span class="o">(</span> <span class="n">ObjectInspector</span><span class="o">[]</span> <span class="n">arguments</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">UDFArgumentException</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">arguments</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;getValueFromEventArgsStr only takes 2 arguments: List&lt;Struct&lt;bigint,string,bigint,string&gt;&gt;, String&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 1. Check we received the right object types.</span>
+</span><span class='line'>        <span class="n">ObjectInspector</span> <span class="n">a</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span><span class='line'>        <span class="n">ObjectInspector</span> <span class="n">b</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">!(</span> <span class="n">a</span> <span class="k">instanceof</span> <span class="n">ListObjectInspector</span> <span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;The first argument must be a Array&lt;Struct&gt;, &quot;</span>
+</span><span class='line'>                    <span class="o">+</span> <span class="s">&quot; but &quot;</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">!(</span> <span class="n">b</span> <span class="k">instanceof</span> <span class="n">StringObjectInspector</span> <span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;The second argument must be a String, &quot;</span>
+</span><span class='line'>                    <span class="o">+</span> <span class="s">&quot; but &quot;</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 2. Get the object inspector for the list(array) elements; this should be a StructObjectInspector</span>
+</span><span class='line'>        <span class="c1">// Then check that the struct has the correct fields.</span>
+</span><span class='line'>        <span class="c1">// Also, store the ObjectInspectors for use later in the evaluate() method</span>
+</span><span class='line'>        <span class="n">listOI</span>   <span class="o">=</span> <span class="o">(</span><span class="n">ListObjectInspector</span><span class="o">)</span><span class="n">a</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">targetOI</span> <span class="o">=</span> <span class="o">(</span><span class="n">StringObjectInspector</span><span class="o">)</span><span class="n">b</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">structOI</span> <span class="o">=</span> <span class="o">(</span><span class="n">StructObjectInspector</span><span class="o">)</span><span class="n">listOI</span><span class="o">.</span><span class="na">getListElementObjectInspector</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getAllStructFieldRefs</span><span class="o">().</span><span class="na">size</span><span class="o">()</span> <span class="o">!=</span> <span class="mi">4</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Incorrect number of fields in the struct. &quot;</span>
+</span><span class='line'>                    <span class="o">+</span> <span class="s">&quot;The first argument of type Array&lt;Struct&gt; must contains 4 fields, &quot;</span>
+</span><span class='line'>                    <span class="o">+</span> <span class="s">&quot; but &quot;</span> <span class="o">+</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getAllStructFieldRefs</span><span class="o">().</span><span class="na">size</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; fields is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">StructField</span> <span class="n">key_int</span>   <span class="o">=</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;key_int&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">StructField</span> <span class="n">key_str</span>   <span class="o">=</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;key_str&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">StructField</span> <span class="n">value_int</span> <span class="o">=</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;value_int&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">StructField</span> <span class="n">value_str</span> <span class="o">=</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;value_str&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">key_int</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;No \&quot;key_int\&quot; field in input structure &quot;</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getTypeName</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">key_str</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;No \&quot;key_str\&quot; field in input structure &quot;</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getTypeName</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">value_int</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;No \&quot;value_int\&quot; field in input structure &quot;</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getTypeName</span><span class="o">());</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">value_str</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;No \&quot;value_str\&quot; field in input structure &quot;</span> <span class="o">+</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">getTypeName</span><span class="o">());</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="n">kiOI</span> <span class="o">=</span> <span class="n">key_int</span><span class="o">.</span><span class="na">getFieldObjectInspector</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">ksOI</span> <span class="o">=</span> <span class="n">key_str</span><span class="o">.</span><span class="na">getFieldObjectInspector</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">viOI</span> <span class="o">=</span> <span class="n">value_int</span><span class="o">.</span><span class="na">getFieldObjectInspector</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">vsOI</span> <span class="o">=</span> <span class="n">value_str</span><span class="o">.</span><span class="na">getFieldObjectInspector</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">kiOI</span><span class="o">.</span><span class="na">getCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ObjectInspector</span><span class="o">.</span><span class="na">Category</span><span class="o">.</span><span class="na">PRIMITIVE</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input primitive? key_int field must be a bigint, but &quot;</span> <span class="o">+</span> <span class="n">kiOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">ksOI</span><span class="o">.</span><span class="na">getCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ObjectInspector</span><span class="o">.</span><span class="na">Category</span><span class="o">.</span><span class="na">PRIMITIVE</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input primitive? key_str field must be a string, but &quot;</span> <span class="o">+</span> <span class="n">ksOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">viOI</span><span class="o">.</span><span class="na">getCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ObjectInspector</span><span class="o">.</span><span class="na">Category</span><span class="o">.</span><span class="na">PRIMITIVE</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input primitive? value_int field must be a bigint, but &quot;</span> <span class="o">+</span> <span class="n">viOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">vsOI</span><span class="o">.</span><span class="na">getCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ObjectInspector</span><span class="o">.</span><span class="na">Category</span><span class="o">.</span><span class="na">PRIMITIVE</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input primitive? value_str field must be a string, but &quot;</span> <span class="o">+</span> <span class="n">vsOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">((</span><span class="n">PrimitiveObjectInspector</span><span class="o">)</span><span class="n">kiOI</span><span class="o">).</span><span class="na">getPrimitiveCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">PrimitiveObjectInspector</span><span class="o">.</span><span class="na">PrimitiveCategory</span><span class="o">.</span><span class="na">LONG</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input correct primitive? key_int field must be a bigint, but &quot;</span> <span class="o">+</span> <span class="n">kiOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">((</span><span class="n">PrimitiveObjectInspector</span><span class="o">)</span><span class="n">ksOI</span><span class="o">).</span><span class="na">getPrimitiveCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">PrimitiveObjectInspector</span><span class="o">.</span><span class="na">PrimitiveCategory</span><span class="o">.</span><span class="na">STRING</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input correct primitive? key_str field must be a string, but &quot;</span> <span class="o">+</span> <span class="n">ksOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">((</span><span class="n">PrimitiveObjectInspector</span><span class="o">)</span><span class="n">viOI</span><span class="o">).</span><span class="na">getPrimitiveCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">PrimitiveObjectInspector</span><span class="o">.</span><span class="na">PrimitiveCategory</span><span class="o">.</span><span class="na">LONG</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input correct primitive? value_int field must be a bigint, but &quot;</span> <span class="o">+</span> <span class="n">viOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="o">((</span><span class="n">PrimitiveObjectInspector</span><span class="o">)</span><span class="n">vsOI</span><span class="o">).</span><span class="na">getPrimitiveCategory</span><span class="o">()</span> <span class="o">!=</span> <span class="n">PrimitiveObjectInspector</span><span class="o">.</span><span class="na">PrimitiveCategory</span><span class="o">.</span><span class="na">STRING</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">UDFArgumentTypeException</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;Is input correct primitive? value_str field must be a bigint, but &quot;</span> <span class="o">+</span> <span class="n">vsOI</span><span class="o">.</span><span class="na">getTypeName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; is found&quot;</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// 3. the return type of our function is a bigint, so we provide the correct object inspector</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">PrimitiveObjectInspectorFactory</span><span class="o">.</span><span class="na">javaLongObjectInspector</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// The evaluate() method. The input is passed in as an array of DeferredObjects, so that</span>
+</span><span class='line'>    <span class="c1">// computation is not wasted on deserializing them if they&#39;re not actually used</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">evaluate</span><span class="o">(</span> <span class="n">DeferredObject</span><span class="o">[]</span> <span class="n">arguments</span> <span class="o">)</span> <span class="kd">throws</span> <span class="n">HiveException</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Should take 2 arguments</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="n">arguments</span><span class="o">.</span><span class="na">length</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">get</span><span class="o">()</span> <span class="o">)</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Iterate over the elements of the input array</span>
+</span><span class='line'>        <span class="c1">// If a key_str of arguments[1] if found, return key_int</span>
+</span><span class='line'>        <span class="c1">// Else return null</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">nelements</span> <span class="o">=</span> <span class="n">listOI</span><span class="o">.</span><span class="na">getListLength</span><span class="o">(</span><span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">get</span><span class="o">()),</span> <span class="n">val_int</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nelements</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Text</span> <span class="n">tt</span> <span class="o">=</span> <span class="o">(</span><span class="n">Text</span><span class="o">)(</span><span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldData</span><span class="o">(</span> <span class="n">listOI</span><span class="o">.</span><span class="na">getListElement</span><span class="o">(</span><span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">get</span><span class="o">(),</span> <span class="n">i</span><span class="o">),</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;key_str&quot;</span><span class="o">)</span> <span class="o">));</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">t</span> <span class="o">=</span> <span class="n">tt</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'>            <span class="c1">// String skey_str = targetOI.getPrimitiveJavaObject(LSkey_str);</span>
+</span><span class='line'>            <span class="n">String</span> <span class="n">target</span> <span class="o">=</span> <span class="n">targetOI</span><span class="o">.</span><span class="na">getPrimitiveJavaObject</span><span class="o">(</span><span class="n">arguments</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">get</span><span class="o">());</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span> <span class="n">t</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">target</span><span class="o">)</span> <span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">Long</span> <span class="n">ll</span> <span class="o">=</span> <span class="o">((</span><span class="n">LongWritable</span><span class="o">)(</span><span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldData</span><span class="o">(</span> <span class="n">listOI</span><span class="o">.</span><span class="na">getListElement</span><span class="o">(</span><span class="n">arguments</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">get</span><span class="o">(),</span> <span class="n">i</span><span class="o">),</span> <span class="n">structOI</span><span class="o">.</span><span class="na">getStructFieldRef</span><span class="o">(</span><span class="s">&quot;value_int&quot;</span><span class="o">)</span> <span class="o">))).</span><span class="na">get</span><span class="o">();</span>
+</span><span class='line'>                <span class="k">return</span> <span class="n">ll</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<hr />
+
+<h2>小结</h2>
+
+<p>本文粗浅地介绍了一个处理 <code>hive</code> <code>array&lt;struct&lt;&gt;&gt;</code> 数据类型的 <code>GenericUDF</code> 应该如何编写，大概就是这些了，第一次接触，略作记录，仅供参考。</p>
+
+<hr />
+
+<h2>参考</h2>
+
+<ol>
+<li><a href="http://hive.apache.org/javadocs/r0.10.0/api/org/apache/hadoop/hive/ql/udf/generic/GenericUDF.html">官方GenericUDF API</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/HivePlugins">HivePlugins</a></li>
+<li><a href="https://www.inkling.com/read/hadoop-definitive-guide-tom-white-3rd/chapter-12/ch12-section-08">User-Defined Functions</a></li>
+<li><a href="http://www.congiu.com/structured-data-in-hive-a-generic-udf-to-sort-arrays-of-structs/">Structured data in Hive: a generic UDF to sort arrays of structs</a></li>
+<li><a href="http://blog.matthewrathbone.com/2013/08/10/guide-to-writing-hive-udfs.html">Hadoop Hive UDF Tutorial - Extending Hive with Custom Functions</a></li>
+<li><a href="http://www.baynote.com/2012/11/a-word-from-the-engineers/">Writing a Hive Generic UDF</a></li>
+</ol>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-05T05:40:22+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/genericudf/'>genericudf</a>, <a class='category' href='/blog/categories/hive/'>hive</a>, <a class='category' href='/blog/categories/udf/'>udf</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">
