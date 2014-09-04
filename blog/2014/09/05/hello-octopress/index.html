@@ -1,90 +1,104 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Hello Octopress - RonnieTsang&#8217;s Blog</title>
-  <meta name="author" content="RonnieTsang">
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>Hello Octopress  | RonnieTsang&#8217;s Blog</title>
 
-  
-  <meta name="description" content="想要有自己的博客这个想法很久很久了&hellip;行动上却很诚实，鄙视一下自己！ 2013-10-31 号申请的域名 lseek.me 一直闲置到现在，着实是暴殄天物！想当初好不容易才找到这个为数甚少的未被注册的 C 标准库函数名 lseek， 而且 lseek.me 刚好带有点 寻求自我 的意味 &hellip;">
-  
+<meta name="author" content="RonnieTsang"> 
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="想要有自己的博客这个想法很久很久了&hellip;行动上却很诚实，鄙视一下自己！ 2013-10-31 号申请的域名 lseek.me 一直闲置到现在，着实是暴殄天物！想当初好不容易才找到这个为数甚少的未被注册的 C 标准库函数名 lseek， 而且 lseek.me 刚好带有点 寻求自我 的意味 &hellip;"> <meta name="keywords" content="">
 
-  
-  <link rel="canonical" href="http://RonnieTsang.github.io/blog/2014/09/05/hello-octopress">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="RonnieTsang's Blog" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
+	<link href="/atom.xml" rel="alternate" title="RonnieTsang's Blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
 
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+
+	
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">RonnieTsang&#8217;s Blog</a></h1>
-  
-    <h2>Be the change you want to see in the world</h2>
-  
-</hgroup>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">RonnieTsang&#8217;s Blog</a></h1>
+<h4>Be the change you want to see in the world</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:RonnieTsang.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:RonnieTsang.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Hello Octopress</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-09-05T01:35:36+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:35 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>想要有自己的博客这个想法很久很久了&hellip;行动上却很诚实，鄙视一下自己！</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Hello Octopress</h2>
+	<div class="entry-content"><p>想要有自己的博客这个想法很久很久了&hellip;行动上却很诚实，鄙视一下自己！</p>
 
 <hr />
 
@@ -96,7 +110,7 @@
 
 <hr />
 
-<p><strong>准备工作</strong></p>
+<h2><strong>准备工作</strong></h2>
 
 <blockquote><ul>
 <li>安装 <a href="http://git-scm.com/">Git</a></li>
@@ -104,39 +118,42 @@
 </ul>
 </blockquote>
 
-<p><strong>搭建 Octopress 环境</strong></p>
+<h2><strong>搭建 Octopress 环境</strong></h2>
 
-<p>(1) 安装 Octopress</p>
+<h3>1) 安装 Octopress</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git://github.com/imathis/octopress.git octopress
-</span><span class='line'>$ cd octopress</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git clone git://github.com/imathis/octopress.git octopress
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd </span>octopress
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>(2) 安装相关依赖</p>
+<h3>2) 安装相关依赖</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gem install bundler
-</span><span class='line'>$ rbenv rehash
-</span><span class='line'>$ bundle install</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>gem install bundler
+</span><span class='line'><span class="nv">$ </span>rbenv rehash
+</span><span class='line'><span class="nv">$ </span>bundle install
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>(3) 安装默认的 Octopress 主题</p>
+<h3>3) 安装默认的 Octopress 主题</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake install</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake install
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>参考：<a href="http://octopress.org/docs/setup/">Initial Setup</a></p>
 
-<p><strong>配置 Octopress</strong></p>
+<h2><strong>配置 Octopress</strong></h2>
 
 <p>Octopress 的作者已经尽量让配置简化了。大多数情况下只需要配置 <code>_config.yml</code> 和 <code>Rakefile</code> 文件即可。其中 <code>Rakefile</code> 是跟博客部署相关，一般情况下并不需要修改这个文件，除非使用了 <code>rsync</code>。</p>
 
-<p>这一块我就修改了一下 <code>_config.yml</code> 文件，把 <code>url</code> 和 <code>author</code> 加进去而已。其中 <code>url</code> 是必填项，内容是我在 github 上创建的一个仓库地址 <a href="http://ronnietsang.github.io">http://ronnietsang.github.io</a></p>
+<p>这一块我就修改了一下 <code>_config.yml</code> 文件，把 <code>url</code> 和 <code>author</code> 加进去而已。其中 <code>url</code> 是必填项，内容是我在 github 上创建的一个仓库地址 <code>http://ronnietsang.github.io</code></p>
 
 <p>接着删除了里面的 twitter 相关的信息，否则据说是由于 GFW 的原因，将会造成页面加载很慢。</p>
 
@@ -144,68 +161,72 @@
 
 <p>参考：<a href="http://octopress.org/docs/configuring/">Basic Configuration</a></p>
 
-<p><strong>创建第一篇博客</strong></p>
+<h2><strong>创建第一篇博客</strong></h2>
 
 <p>没错，现在就已经可以开始写博客了！</p>
 
-<p>(1) 创建博文</p>
+<h3>1) 创建博文</h3>
 
 <p>Octopress 为我们提供了一些 task 来创建博文和页面。博文必须存储在 <code>source/_posts</code> 目录下，并且需要按照 Jekyll 的命名规范对文章进行命名：<code>YYYY-MM-DD-post-title.markdown</code>。文章的名字会被当做 <code>url</code> 的一部分，而其中的日期用于对博文的区分和排序。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake new_post["Hello Octopress"]</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake new_post<span class="o">[</span><span class="s2">&quot;Hello Octopress&quot;</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>其中 <code>Hello Octopress</code> 为博文的文件名，创建出来的文件默认是 <code>markdown</code> 格式。上面的命令会创建出这样一个文件：<code>./source/_posts/2014-09-04-hello-octopress.markdown</code>。打开这个文件，可以看到里面有如下一些内容了 ( 告诉Jekyll博客引擎如何处理博文和页面 )：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>---
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>---
 </span><span class='line'>layout: post
-</span><span class='line'>title: "Hello Octopress"
+</span><span class='line'>title: <span class="s2">&quot;Hello Octopress&quot;</span>
 </span><span class='line'>date: 2014-09-04 19:13:48 +0800
-</span><span class='line'>comments: true
+</span><span class='line'>comments: <span class="nb">true</span>
 </span><span class='line'>categories:
-</span><span class='line'>---</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>---
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>(2) 编辑博文</p>
+<h3>2) 编辑博文</h3>
 
 <p>接下来使用你喜欢的 markdown 编辑器编写博文，完成后贴到上面的文件中就可以了。</p>
 
 <blockquote><p>我用的是 <code>作业部落</code> 出品的 <a href="https://zybuluo.com/mdeditor">Cmd Markdown</a> 在线编辑阅读器，基本上兼容 github 的 markdown 文法，挺好用的，推荐！</p></blockquote>
 
-<p>(3) 本地预览</p>
+<h3>3) 本地预览</h3>
 
 <p>执行：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake preview</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake preview
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>然后就能在浏览器中进行本地预览访问了： <code>http://127.0.0.1:4000/</code> 或 <code>http://localhost:4000/</code>，效果跟仓库中的一样。</p>
 
-<p>(4) 完整过程</p>
+<h3>4) 完整过程</h3>
 
 <p>下面是创建并部署博文的一个完整过程：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake new_post["Hello Octopress"]
-</span><span class='line'>$ rake generate
-</span><span class='line'>$ git add .
-</span><span class='line'>$ git commit -m 'My first blog -- Hello Octopress'
-</span><span class='line'>$ git push origin source
-</span><span class='line'>$ rake deploy</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake new_post<span class="o">[</span><span class="s2">&quot;Hello Octopress&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="nv">$ </span>rake generate
+</span><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s1">&#39;My first blog -- Hello Octopress&#39;</span>
+</span><span class='line'><span class="nv">$ </span>git push origin <span class="nb">source</span>
+</span><span class='line'><span class="nv">$ </span>rake deploy
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>先 mark ，现在还无法部署博文，要等后面部署博客完毕再参考这个过程来部署博文。</p>
@@ -214,7 +235,7 @@
 
 <hr />
 
-<p><strong>部署到 Github Pages</strong></p>
+<h2><strong>部署到 Github Pages</strong></h2>
 
 <p>官方推荐了3种部署方式：</p>
 
@@ -227,7 +248,9 @@
 
 <p>当然了，我选择的是 <strong><a href="https://pages.github.com/">GitHub Pages</a></strong> 。</p>
 
-<p>(1) 创建 github 仓库 <a href="https://github.com/RonnieTsang/ronnietsang.github.io">ronnietsang.github.io</a> ( 网上很多年代久远的教程都是说 com 后缀，现在改成 io 了 )</p>
+<h3>1) 创建仓库</h3>
+
+<p>在 <a href="https://github.com/">GitHub</a> 上创建仓库 <a href="https://github.com/RonnieTsang/ronnietsang.github.io">ronnietsang.github.io</a> ( 网上很多年代久远的教程都是说 com 后缀，现在改成 io 了 )</p>
 
 <blockquote><ul>
 <li>保持新建仓库为空的，不要勾选创建 <code>README</code> 文件等选项( 这可能导致后面部署 <code>rake deploy</code> 失败，引出一系列问题 )</li>
@@ -235,12 +258,13 @@
 </ul>
 </blockquote>
 
-<p>(2) 配置仓库</p>
+<h3>2) 配置仓库</h3>
 
 <p>一键配置：只需要利用 octopress 的一个配置 <code>rake</code> 任务就可以自动配置上面创建的仓库，超级方便：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake setup_github_pages</span></code></pre></td></tr></table></div></figure>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake setup_github_pages
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>这个命令会要求你输入刚刚创建的仓库的 <code>url</code> ( <code>ssh</code> or <code>https</code> url )，拷贝过来，回车，接下来它就干了这么几件事：</p>
@@ -254,14 +278,15 @@
 </ul>
 </blockquote>
 
-<p>(3) 部署仓库</p>
+<h3>3) 部署仓库</h3>
 
 <p>命令如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ rake generate
-</span><span class='line'>$ rake deploy</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>rake generate
+</span><span class='line'><span class="nv">$ </span>rake deploy
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>干了这么几件事：</p>
@@ -274,12 +299,13 @@
 
 <p>不过博客的 <code>source</code> 需要单独提交，执行如下命令就可以将 <code>source</code> 提交到仓库的 <code>source</code> 分支下。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git add .
-</span><span class='line'>$ git commit -m 'Initial source commit'
-</span><span class='line'>$ git push origin source</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>git add .
+</span><span class='line'><span class="nv">$ </span>git commit -m <span class="s1">&#39;Initial source commit&#39;</span>
+</span><span class='line'><span class="nv">$ </span>git push origin <span class="nb">source</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>至此，博客已经完成基本的部署。但是当我满心期待地使用前面配置的 url 来访问时，直接来了一个冷冰冰的 <code>404</code>！好吧，莫慌，原来是有延迟，稍等几分钟(我等了半个钟&hellip;)，终于可以正常访问了！</p>
@@ -288,7 +314,7 @@
 
 <hr />
 
-<p><strong>更多功能</strong></p>
+<h2><strong>更多功能</strong></h2>
 
 <p>在搭建博客的时候，我们可能会对博客做一些配置，例如添加评论、域名解析、分享等。先 mark，以后再慢慢了解吧。</p>
 
@@ -310,81 +336,58 @@
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
 
-<span class="byline author vcard">Posted by <span class="fn">RonnieTsang</span></span>
 
-      
+<time datetime="2014-09-05T01:35:36+08:00" pubdate data-updated="true"></time></div>
+	
 
+<div class="tags">
 
-
-
-<time class='entry-date' datetime='2014-09-05T01:35:36+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:35 am</span></time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/blog/'>blog</a>, <a class='category' href='/blog/categories/github/'>github</a>, <a class='category' href='/blog/categories/octopress/'>octopress</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-      
-    </p>
-  </footer>
-</article>
+	<a class='category' href='/blog/categories/blog/'>blog</a>, <a class='category' href='/blog/categories/github/'>github</a>, <a class='category' href='/blog/categories/octopress/'>octopress</a>
 
 </div>
 
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2014/09/05/hello-octopress/">Hello Octopress</a>
-      </li>
-    
-  </ul>
-</section>
+
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> &#8212;>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
 
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2014
 
+    RonnieTsang
 
-
-  
-</aside>
-
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - RonnieTsang -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
+<br>
+Powered by Octopress.
 </footer>
-  
-
-
-
-
-
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
