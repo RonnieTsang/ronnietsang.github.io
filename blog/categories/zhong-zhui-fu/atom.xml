@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 中缀符 | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/zhong-zhui-fu/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-12T17:24:22+08:00</updated>
+  <updated>2014-09-12T17:30:39+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -58,8 +58,8 @@
 </ul>
 </blockquote>
 
-<p>  <code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法
-  <code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</p>
+<p><code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法
+<code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</p>
 
 <blockquote><ul>
 <li><strong>参数类型</strong></li>
