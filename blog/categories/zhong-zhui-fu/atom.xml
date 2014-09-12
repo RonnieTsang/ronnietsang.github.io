@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 中缀符 | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/zhong-zhui-fu/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-12T17:33:21+08:00</updated>
+  <updated>2014-09-12T17:37:34+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -49,7 +49,7 @@
 </ul>
 </blockquote>
 
-<p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 gb 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
+<p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 <code>gb</code> 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
 
 <p>整理如下：</p>
 
@@ -58,9 +58,11 @@
 </ul>
 </blockquote>
 
-<p>   <code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法</p>
+<ol>
+<li><code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法</li>
+<li><code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</li>
+</ol>
 
-<p>   <code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</p>
 
 <blockquote><ul>
 <li><strong>参数类型</strong></li>
@@ -74,8 +76,7 @@
 </ul>
 </blockquote>
 
-<p>  本例中，fun 和 second 组成了该方法的签名关键字
-  不过还是有些怪异，这样理解，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</p>
+<p>  本例中，fun 和 second 组成了该方法的签名关键字。不过还是有些怪异，这样理解吧，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</p>
 
 <p>再举例，也可以编写没有参数名的方法定义与调用：</p>
 
