@@ -4,7 +4,7 @@
   <title><![CDATA[RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-12T17:20:36+08:00</updated>
+  <updated>2014-09-12T17:24:22+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -18,11 +18,7 @@
     <link href="http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc/"/>
     <updated>2014-09-12T17:19:20+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc</id>
-    <content type="html"><![CDATA[<h1>理解 Objective-C 中缀符</h1>
-
-<hr />
-
-<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
+    <content type="html"><![CDATA[<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
 
 <p>声明：</p>
 
@@ -70,16 +66,27 @@
 <p>整理如下：</p>
 
 <blockquote><ul>
-<li><strong>方法修饰符</strong>
-<code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法
-<code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</li>
-<li><strong>参数类型</strong>
-a 与 b 分别是两个参数，均为 int 类型</li>
-<li><strong>方法签名</strong>
-本例中，fun 和 second 组成了该方法的签名关键字
-不过还是有些怪异，这样理解，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</li>
+<li><strong>方法修饰符</strong></li>
 </ul>
 </blockquote>
+
+<p>  <code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法
+  <code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</p>
+
+<blockquote><ul>
+<li><strong>参数类型</strong></li>
+</ul>
+</blockquote>
+
+<p>  a 与 b 分别是两个参数，均为 int 类型</p>
+
+<blockquote><ul>
+<li><strong>方法签名</strong></li>
+</ul>
+</blockquote>
+
+<p>  本例中，fun 和 second 组成了该方法的签名关键字
+  不过还是有些怪异，这样理解，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</p>
 
 <p>再举例，也可以编写没有参数名的方法定义与调用：</p>
 
