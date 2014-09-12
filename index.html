@@ -9,7 +9,16 @@
   <meta name="author" content="RonnieTsang">
 
   
-  <meta name="description" content="业务背景 公司的数据分析业务 ETL 过程中，原始数据经过数据清洗之后，统一转换成自定义的 protobuf CustomEventMessage 格式，用户自定义事件 ( 多个KV对的格式 ) 保存在 event_args 字段中。最终 CustomEventMessage 数据将导入 hive &hellip;">
+  <meta name="description" content="理解 Objective-C 中缀符 初学 OC ，对其方法的声明语法感到很奇怪。比如： 声明： 1
+2
+@interface C : NSObject
++(int) fun: (int) a second: (int) b; 定义： 1
+2
+3
+4
+5
+6
+@implementation C &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -62,6 +71,109 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/12/understanding-infix-notation-in-oc/">Understanding Infix Notation in OC</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-12T17:19:20+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:19 pm</span></time>
+        
+          | <a href="/blog/2014/09/12/understanding-infix-notation-in-oc/#comments">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>理解 Objective-C 中缀符</h1>
+
+<hr />
+
+<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
+
+<p>声明：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">@</span><span class="n">interface</span> <span class="nl">C</span> <span class="p">:</span> <span class="n">NSObject</span>
+</span><span class='line'><span class="o">+</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nl">fun</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">a</span> <span class="nl">second</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">b</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>定义：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="err">@</span><span class="n">implementation</span> <span class="n">C</span>
+</span><span class='line'><span class="o">+</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nl">fun</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">a</span> <span class="nl">second</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">b</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="err">@</span><span class="n">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>调用：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span> <span class="nl">fun</span><span class="p">:</span> <span class="mi">2</span> <span class="nl">second</span><span class="p">:</span> <span class="mi">3</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>书上说这种语法称为中缀符的形式，我的疑问是：</p>
+
+<blockquote><ul>
+<li><code>fun</code> 应该就是方法名吧？那 <code>second</code> 理解为什么？</li>
+<li>如果 <code>second</code> 理解为第二个参数的名字，那 <code>b</code> 又是什么？同时 <code>fun</code> 又是什么？</li>
+</ul>
+</blockquote>
+
+<p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 gb 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
+
+<p>整理如下：</p>
+
+<blockquote><ul>
+<li><strong>方法修饰符</strong>
+<code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法
+<code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</li>
+<li><strong>参数类型</strong>
+a 与 b 分别是两个参数，均为 int 类型</li>
+<li><strong>方法签名</strong>
+本例中，fun 和 second 组成了该方法的签名关键字
+不过还是有些怪异，这样理解，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</li>
+</ul>
+</blockquote>
+
+<p>再举例，也可以编写没有参数名的方法定义与调用：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="o">+</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nl">fun</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nl">a</span><span class="p">:</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">b</span><span class="p">;</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">C</span> <span class="nl">fun</span><span class="p">:</span> <span class="mi">2</span><span class="o">:</span> <span class="mi">3</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -838,6 +950,10 @@ OK，很明显，我们需要 <code>UDF</code> 来完成这一任务。</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/12/understanding-infix-notation-in-oc/">Understanding Infix Notation in OC</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/09/05/writing-a-hive-generic-udf/">Writing a Hive Generic UDF</a>

@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc/</loc>
+    <lastmod>2014-09-12T17:19:20+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://RonnieTsang.github.io/blog/2014/09/05/writing-a-hive-generic-udf/</loc>
     <lastmod>2014-09-05T05:40:22+08:00</lastmod>
     <priority>0.8</priority>
@@ -17,35 +23,35 @@
   
   <url>
     <loc>http://RonnieTsang.github.io/blog/</loc>
-    <lastmod>2014-09-12T14:07:38+08:00</lastmod>
+    <lastmod>2014-09-12T17:20:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/archives/</loc>
-    <lastmod>2014-09-12T14:07:38+08:00</lastmod>
+    <lastmod>2014-09-12T17:20:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/blog/archives/</loc>
-    <lastmod>2014-09-12T14:07:38+08:00</lastmod>
+    <lastmod>2014-09-12T17:20:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/</loc>
-    <lastmod>2014-09-12T14:07:38+08:00</lastmod>
+    <lastmod>2014-09-12T17:20:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <url>
     <loc>http://RonnieTsang.github.io/about/</loc>
-    <lastmod>2014-09-12T14:07:38+08:00</lastmod>
+    <lastmod>2014-09-12T17:20:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
