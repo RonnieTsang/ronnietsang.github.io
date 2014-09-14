@@ -3,7 +3,7 @@ layout: post
 title: "Understanding # and ## in C/C++"
 date: 2014-09-15 00:09:19 +0800
 comments: true
-categories: 
+categories: C/C++ Language 
 ---
 
 这两个符号在 C/C++ 语言中属于`编译器预处理`的范畴，属于编译期概念（而非运行期概念）
@@ -13,6 +13,8 @@ categories:
 `所谓的子串就是指编译器能够识别的最小语法单元。具体的定义在编译原理里面有详尽解释，但不知道也无所谓`
 
 **`#`连接符** 的功能是把传递过来的参数当成字符串进行替代，即所谓 `字符串化`
+
+<!-- more -->
 
 ## 实例说明
 

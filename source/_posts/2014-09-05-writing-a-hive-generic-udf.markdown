@@ -3,7 +3,7 @@ layout: post
 title: "Writing a Hive Generic UDF"
 date: 2014-09-05 05:40:22 +0800
 comments: true
-categories: hive udf genericudf
+categories: hive
 ---
 
 ## 业务背景
@@ -32,6 +32,8 @@ or
 or
     event_args['paytype']
 ```
+
+<!-- more -->
 
 ### 存在的问题及对策
 

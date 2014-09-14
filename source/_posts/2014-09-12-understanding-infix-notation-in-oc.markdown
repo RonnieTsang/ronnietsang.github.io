@@ -3,7 +3,7 @@ layout: post
 title: "Understanding Infix Notation in OC"
 date: 2014-09-12 17:19:20 +0800
 comments: true
-categories: Objective-C 中缀符
+categories: Objective-C Language
 ---
 
 初学 OC ，对其方法的声明语法感到很奇怪。比如：
@@ -36,6 +36,8 @@ int a = [C fun: 2 second: 3];
 
 > * `fun` 应该就是方法名吧？那 `second` 理解为什么？
 > * 如果 `second` 理解为第二个参数的名字，那 `b` 又是什么？同时 `fun` 又是什么？
+
+<!-- more -->
 
 好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 `gb` 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。
 

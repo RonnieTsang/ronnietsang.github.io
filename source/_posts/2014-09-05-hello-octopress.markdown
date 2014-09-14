@@ -3,7 +3,7 @@ layout: post
 title: "Hello Octopress"
 date: 2014-09-05 01:35:36 +0800
 comments: true
-categories: octopress github blog 
+categories: octopress 
 ---
 
 想要有自己的博客这个想法很久很久了...行动上却很诚实，鄙视一下自己！
@@ -16,6 +16,7 @@ categories: octopress github blog
 
 于是一通搜索，看了诸多教程，基本上都是大同小异，照虎画猫很快把 blog 搭建了起来。本文简单记录一下整个过程：
 
+<!-- more -->
 
 ----------
 
