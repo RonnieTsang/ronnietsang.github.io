@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-c | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-15T00:09:56+08:00</updated>
+  <updated>2014-09-15T00:17:49+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -48,6 +48,9 @@
 <li>如果 <code>second</code> 理解为第二个参数的名字，那 <code>b</code> 又是什么？同时 <code>fun</code> 又是什么？</li>
 </ul>
 </blockquote>
+
+<!-- more -->
+
 
 <p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 <code>gb</code> 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Genericudf | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/genericudf/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-15T00:09:56+08:00</updated>
+  <updated>2014-09-15T00:17:49+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -41,6 +41,9 @@ or
 or
     event_args['paytype']
 </code></pre>
+
+<!-- more -->
+
 
 <h3>存在的问题及对策</h3>
 

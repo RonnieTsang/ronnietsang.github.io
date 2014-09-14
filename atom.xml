@@ -4,7 +4,7 @@
   <title><![CDATA[RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-15T00:09:56+08:00</updated>
+  <updated>2014-09-15T00:17:49+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -25,6 +25,9 @@
 <p><code>所谓的子串就是指编译器能够识别的最小语法单元。具体的定义在编译原理里面有详尽解释，但不知道也无所谓</code></p>
 
 <p><strong><code>#</code>连接符</strong> 的功能是把传递过来的参数当成字符串进行替代，即所谓 <code>字符串化</code></p>
+
+<!-- more -->
+
 
 <h2>实例说明</h2>
 
@@ -122,6 +125,9 @@
 </ul>
 </blockquote>
 
+<!-- more -->
+
+
 <p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 <code>gb</code> 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
 
 <p>整理如下：</p>
@@ -203,6 +209,11 @@
 </span><span class='line'><span class="k">or</span>
 </span><span class='line'><span class="n">event_args</span><span class="p">[</span><span class="s1">&#39;paytype&#39;</span><span class="p">]</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
 
 
 <h3>存在的问题及对策</h3>
@@ -655,6 +666,9 @@ OK，很明显，我们需要 <code>UDF</code> 来完成这一任务。</p>
 <p>前段时间无意知道 <code>github</code> + <code>octopress</code> 搭建 blog 这玩意，而且还是免费的，<code>github</code> 为你管理服务器，并提供无限流量，世界各地都有理想的访问速度，这还得了，叼炸天啊，不过过瘾怎么行！</p>
 
 <p>于是一通搜索，看了诸多教程，基本上都是大同小异，照虎画猫很快把 blog 搭建了起来。本文简单记录一下整个过程：</p>
+
+<!-- more -->
+
 
 <hr />
 
