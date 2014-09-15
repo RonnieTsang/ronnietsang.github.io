@@ -1,37 +1,79 @@
-function goTop(acceleration, time)
-{
-        acceleration = acceleration || 0.1;
-        time = time || 16;
+/***********************************************
+* Scroll To Top Control script- Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Modified by www.MyBloggerTricks.com
+* Modified by www.scrolltotop.com
+* This notice MUST stay intact for legal use
+* Visit Project Page at http://www.dynamicdrive.com for full source code
+***********************************************/
 
-        var x1 = 0;
-        var y1 = 0;
-        var x2 = 0;
-        var y2 = 0;
-        var x3 = 0;
-        var y3 = 0;
+var scrolltotop={
+    //startline: Integer. Number of pixels from top of doc scrollbar is scrolled before showing control
+    //scrollto: Keyword (Integer, or "Scroll_to_Element_ID"). How far to scroll document up when control is clicked on (0=top).
+    setting: {startline:100, scrollto: 0, scrollduration:1000, fadeduration:[500, 100]},
+    controlHTML: '<img src="/images/top.jpg" border=0 alt="Back to Top">', //HTML for control, which is auto wrapped in DIV w/ ID="topcontrol"
+    controlattrs: {offsetx:5, offsety:5}, //offset of control relative to right/ bottom of window corner
+    anchorkeyword: '#top', //Enter href value of HTML anchors on the page that should also act as "Scroll Up" links
+ state: {isvisible:false, shouldvisible:false},
 
-        if (document.documentElement)
-        {
-                x1 = document.documentElement.scrollLeft || 0;
-                y1 = document.documentElement.scrollTop || 0;
+    scrollup:function(){
+        if (!this.cssfixedsupport) //if control is positioned using JavaScript
+            this.$control.css({opacity:0}) //hide control immediately after clicking it
+        var dest=isNaN(this.setting.scrollto)? this.setting.scrollto : parseInt(this.setting.scrollto)
+        if (typeof dest=="string" && jQuery('#'+dest).length==1) //check element set by string exists
+            dest=jQuery('#'+dest).offset().top
+        else
+            dest=0
+        this.$body.animate({scrollTop: dest}, this.setting.scrollduration);
+    },
+
+    keepfixed:function(){
+        var $window=jQuery(window)
+        var controlx=$window.scrollLeft() + $window.width() - this.$control.width() - this.controlattrs.offsetx
+        var controly=$window.scrollTop() + $window.height() - this.$control.height() - this.controlattrs.offsety
+        this.$control.css({left:controlx+'px', top:controly+'px'})
+    },
+
+    togglecontrol:function(){
+
+        var scrolltop=jQuery(window).scrollTop()
+        if (!this.cssfixedsupport)
+            this.keepfixed()
+        this.state.shouldvisible=(scrolltop>=this.setting.startline)? true : false
+        if (this.state.shouldvisible && !this.state.isvisible){
+            this.$control.stop().animate({opacity:1}, this.setting.fadeduration[0])
+            this.state.isvisible=true
         }
-        if (document.body)
-        {
-                x2 = document.body.scrollLeft || 0;
-                y2 = document.body.scrollTop || 0;
+
+        else if (this.state.shouldvisible==false && this.state.isvisible){
+            this.$control.stop().animate({opacity:0}, this.setting.fadeduration[1])
+            this.state.isvisible=false
         }
-        var x3 = window.scrollX || 0;
-        var y3 = window.scrollY || 0;
+    },
+   
+    init:function(){
+        jQuery(document).ready(function($){
+            var mainobj=scrolltotop
+            var iebrws=document.all
+            mainobj.cssfixedsupport=!iebrws || iebrws && document.compatMode=="CSS1Compat" && window.XMLHttpRequest //not IE or IE7+ browsers in standards mode
+            mainobj.$body=(window.opera)? (document.compatMode=="CSS1Compat"? $('html') : $('body')) : $('html,body')
+            mainobj.$control=$('<div id="topcontrol">'+mainobj.controlHTML+'</div>')
+                .css({position:mainobj.cssfixedsupport? 'fixed' : 'absolute', bottom:mainobj.controlattrs.offsety, right:mainobj.controlattrs.offsetx, opacity:0, cursor:'pointer'})
+                .attr({title:'Scroll to Top'})
+                .click(function(){mainobj.scrollup(); return false})
+                .appendTo('body')
+            if (document.all && !window.XMLHttpRequest && mainobj.$control.text()!='') //loose check for IE6 and below, plus whether control contains any text
+                mainobj.$control.css({width:mainobj.$control.width()}) //IE6- seems to require an explicit width on a DIV containing text
+            mainobj.togglecontrol()
 
-        var x = Math.max(x1, Math.max(x2, x3));
-        var y = Math.max(y1, Math.max(y2, y3));
-
-        var speed = 1 + acceleration;
-        window.scrollTo(Math.floor(x / speed), Math.floor(y / speed));
-
-        if(x > 0 || y > 0)
-        {
-                var invokeFunction = "goTop(" + acceleration + ", " + time + ")";
-                window.setTimeout(invokeFunction, time);
-        }
+$('a[href="' + mainobj.anchorkeyword +'"]').click(function(){
+                mainobj.scrollup()
+                return false
+            })
+            $(window).bind('scroll resize', function(e){
+                mainobj.togglecontrol()
+            })
+        })
+    }
 }
+scrolltotop.init()
+
