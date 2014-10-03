@@ -4,7 +4,7 @@
   <title><![CDATA[RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-09-15T13:30:00+08:00</updated>
+  <updated>2014-10-03T09:52:39+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -12,6 +12,734 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why Should C Programmers Learn Erlang?]]></title>
+    <link href="http://RonnieTsang.github.io/blog/2014/10/03/why-should-c-programmers-learn-erlang/"/>
+    <updated>2014-10-03T09:51:04+08:00</updated>
+    <id>http://RonnieTsang.github.io/blog/2014/10/03/why-should-c-programmers-learn-erlang</id>
+    <content type="html"><![CDATA[<p>标签（空格分隔）： Erlang</p>
+
+<p>这是一篇翻译文章，原文<a href="http://tchen.me/posts/2013-07-22-why-should-c-programmers-learn-erlang.html">在此</a>。水平有限，见笑了。</p>
+
+<p>2013年底初接触 <a href="http://www.erlang.org/">Erlang</a> ，真的被她震撼到了！虽然一开始很不习惯其语法和变量只能绑定不能改变值等各种新奇的东西，写起代码来也很别扭，但是通过一天的接触学习，毫不夸张地说，我爱上她了。</p>
+
+<p>你要问为什么？
+爱难道需要理由吗？当然要，翻译这篇文章，就是为了回答这个问题！</p>
+
+<p>很可惜的是，后来由于各种原因包括工作变动，并没有继续深入学习使用过 Erlang ，仅以此文，开启重新学习 Erlang 的计划！</p>
+
+<p>以下是正文：</p>
+
+<hr />
+
+<h1>前言</h1>
+
+<p>如果有人跳出来说一种语言比另一种语言好，通常这将引发这两个语言阵营之间一场激烈的争论。一旦你使用某种语言很长时间，你会成为她的狂热粉丝，并不自觉地试图去捍卫她。不管你承不承认，（此时的）你已经跳入了一个陷阱，你所能看到的东西被极大地限制了（，变得狭隘）。</p>
+
+<p>对此，《肖生克的救赎》给出了很好地注解：
+<img src="http://tchen.me/assets/files/snapshots/institutionalized.jpg" alt="The Shawshank Redemption" /></p>
+
+<blockquote><ul>
+<li>[Red] 这些墙很有趣。刚入狱的时候，你痛恨周围的高墙；慢慢地，你习惯了生活在其中；最终你会发现自己不得不依靠它而生存。这就叫体制化。</li>
+</ul>
+</blockquote>
+
+<p>所以趁着在体制化的泥潭中还没有陷得太深，让我们尝点新鲜的玩意儿吧———学习一门 C 家族以外的语言，一门带你进入全新领域的语言。</p>
+
+<p>对，<code>Erlang</code> 看起来是个很不错的选择！</p>
+
+<hr />
+
+<h1>为什么是 Erlang ?</h1>
+
+<p>Erlang 最初由 Ericsson 公司为了其“下一代”交换机而开发出来的，已经有了 20 多年的历史（诞生于 1987 年，1998 年开源）。</p>
+
+<p>Erlang 以 <a href="http://en.wikipedia.org/wiki/Prolog">Prolog</a> 语言为基础，加入了 <a href="http://en.wikipedia.org/wiki/Functional_programming">函数式编程</a> 的特性，加之其难以理解的语法，使她看起来真是一门古怪的语言。</p>
+
+<p>然而，Erlang 这门语言融合了几乎最优秀的设计哲学，（她的设计思想）领先当今时代至少 10 年。</p>
+
+<p>（真这么牛逼？）容我慢慢道来。</p>
+
+<h2>几乎无副作用</h2>
+
+<p>作为一门函数语言， Erlang 摒弃了 <code>共享状态</code> 的概念。变量只能被 <code>绑定</code>，（一旦完成绑定，变量的值就）不能被改变。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>1&gt; <span class="nv">X</span> <span class="o">=</span> 1.
+</span><span class='line'>1
+</span><span class='line'>2&gt; <span class="nv">X</span> <span class="o">=</span> X + 1.
+</span><span class='line'>** exception error: no match of right hand side value 2
+</span><span class='line'>3&gt; <span class="nv">X</span> <span class="o">=</span> 2.
+</span><span class='line'>** exception error: no match of right hand side value 2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这保证了你能写出没有副作用的函数，也就是说，用相同的参数多次调用一个函数，返回值是一样的。这是 Erlang 一个很重要的优点，它带来的好处是：</p>
+
+<blockquote><ul>
+<li><strong>你（几乎）不需要去保护所谓的 <code>临界区</code>。</strong> 想一想并发环境下的 C 代码，你需要使用若干 <code>同步原语</code> 来保护数据不被破坏。糟糕的同步实现还会给系统带来底下的性能和不稳定性。这是让很多 C 程序员头疼的地方。</li>
+<li><strong>底层优化变得容易。</strong> 因为编译器知道一个变量一旦完成绑定将不再改变，它可以对寄存器的使用采用相当激进的优化策略。</li>
+<li><strong>垃圾回收变得容易。</strong> 可怜的 Java 虚拟机，为了确定一个变量是否可回收可没那么轻松，因为它可能被别的变量所引用，可能还会被使用或者改变。Erlang 不同，一个变量的作用域仅在当前函数，没有其他的代码会访问到它，更别说改变它的值了。(感兴趣的话，可以进一步了解一下 <a href="http://stackoverflow.com/questions/10221907/garbage-collection-and-memory-management-in-erlang">Erlang 的垃圾收集和内存管理</a>。)</li>
+</ul>
+</blockquote>
+
+<h2>内建的 异步/并发 机制</h2>
+
+<p>Erlang 内建了对 <code>并发/异步</code> 机制的支持，其背后的思想是 <a href="http://en.wikipedia.org/wiki/Actor_model">Actor 模式</a>。在 1986 年的时候，在那个 <code>多核</code>，<code>多线程</code>，甚至 <code>SMP</code>（对称多处理）这些术语还不为人所知的年代，这是多么富有远见的创造啊！</p>
+
+<h3>轻量级进程</h3>
+
+<p>为了支持并发，Erlang 在她的虚拟机中创建自己的轻量级进程。</p>
+
+<blockquote><ul>
+<li>你可以同时创建 <code>上百万</code> 个进程，也不会有操作系统资源瓶颈的问题。</li>
+<li>并且，进程的创建是如此快速———在奔腾4 CPU上这个速度是 350,000 个/每秒。</li>
+<li>Erlang 进程占用的内存资源也非常小——仅在 KB 的粒度（最小可达到约300字节）。操作系统层次的进程动辄 MB 的粒度</li>
+<li>进程调度方面，Erlang 支持 <a href="http://en.wikipedia.org/wiki/Real-time_computing#Soft">软实时</a> 调度。并且 上下文切换 的代价非常小——在现代处理器上，Erlang 进程间切换仅需要 <code>16</code> 个指令周期和 <code>20</code> 纳秒（<a href="http://stackoverflow.com/questions/2708033/technically-why-are-processes-in-erlang-more-efficient-than-os-threads">参考</a>）。如果你对进程调度感兴趣，可参阅 <a href="http://jlouisramblings.blogspot.com/2013/01/how-Erlang-does-scheduling.html">Erlang 如何调度</a>。</li>
+</ul>
+</blockquote>
+
+<h3>消息传递</h3>
+
+<p>Erlang 使用 <code>消息传递</code> 来进行 <code>进程间通信</code>，这是继承自 Actor 模式 的方法。
+每个 Erlang 进程都有用来存储传入 <code>消息</code> 的 <code>信箱</code>。
+得益于内建进程和进程间的消息传递等机制， Erlang 是完全异步的。</p>
+
+<h4>实例</h4>
+
+<p><code>代码</code>：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">echo_server</span><span class="p">).</span>
+</span><span class='line'><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">rpc</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">loop</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">rpc</span><span class="p">(</span><span class="nv">Pid</span><span class="p">,</span> <span class="nv">Request</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="nv">Pid</span> <span class="o">!</span> <span class="p">{</span><span class="n">self</span><span class="p">(),</span> <span class="nv">Request</span><span class="p">},</span>
+</span><span class='line'>    <span class="k">receive</span>
+</span><span class='line'>        <span class="nv">Response</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="nv">Response</span>
+</span><span class='line'>    <span class="k">end</span><span class="p">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">loop</span><span class="p">()</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="k">receive</span>
+</span><span class='line'>        <span class="p">{</span><span class="nv">From</span><span class="p">,</span> <span class="p">{</span><span class="n">message</span><span class="p">,</span> <span class="nv">Message</span><span class="p">}}</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="nv">From</span> <span class="o">!</span> <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">Message</span><span class="p">},</span>
+</span><span class='line'>            <span class="n">loop</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">{</span><span class="nv">From</span><span class="p">,</span> <span class="nv">Request</span><span class="p">}</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="nv">From</span> <span class="o">!</span> <span class="p">{</span><span class="n">error</span><span class="p">,</span> <span class="nv">Request</span><span class="p">},</span>
+</span><span class='line'>            <span class="n">loop</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">end</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>命令行执行</code>：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>1&gt; c<span class="o">(</span>echo_server<span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,echo_server<span class="o">}</span>
+</span><span class='line'>2&gt; <span class="nv">Pid</span> <span class="o">=</span> spawn<span class="o">(</span>fun echo_server:loop/0<span class="o">)</span>.
+</span><span class='line'>&lt;0.42.0&gt;
+</span><span class='line'>3&gt; echo_server:rpc<span class="o">(</span>Pid, <span class="o">{</span>message, <span class="s2">&quot;Hello world!&quot;</span><span class="o">})</span>.
+</span><span class='line'><span class="o">{</span>ok,<span class="s2">&quot;Hello world!&quot;</span><span class="o">}</span>
+</span><span class='line'>4&gt; echo_server:rpc<span class="o">(</span>Pid, <span class="o">{</span>message1, <span class="s2">&quot;Hello world!&quot;</span><span class="o">})</span>.
+</span><span class='line'><span class="o">{</span>error,<span class="o">{</span>message1,<span class="s2">&quot;Hello world!&quot;</span><span class="o">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>希望你没被上面这些语法和函数式编程的语句吓到。我不打算对代码细节进行展开，简单点说，这段代码创建了一个回显服务器，并向该服务器发送消息。</p>
+
+<p>使用 <code>spawn</code>，<code>!</code>(消息传递关键字) 和 <code>receive</code>，我们仅用几行代码就完成了服务端的创建。对比一下，在 C，Java，Python，Ruby 或者 node.js 中如何完成相同的任务，你就会发现 Erlang 是多么的优雅！</p>
+
+<p><code>Actor</code> 模式对于 <code>并发</code> 是如此的重要，以至于一些现代的语言比如 <a href="http://golang.org/">Golong</a> 也在语言层面上对它进行支持。我对 Golang 并不熟悉，但是（我知道）它允许共享内存，因此在 Golang 中进行并发编程可能仍然需要同步的工作。并且，我认为 Golang 并不支持软实时，因为这是 Erlang 的设计目标而非 Golang 的。</p>
+
+<p>诸如 Java，Python 和 Rudy 等其他语言，则使用 <code>库</code> 的方式对 Actor 模式进行支持。对其 <code>效率</code> 我持质疑的态度。只有把 <code>协程</code> 及其 <code>调度</code> 放到 <code>虚拟机</code> 层面，你才能获得最好的性能。（这段话不甚理解，mark）</p>
+
+<h2>可扩展性</h2>
+
+<p>从前面的例子可以看出在 Erlang 里我们的代码看起来结构相对松散些（是这个意思不？）。加上内建的并发支持，Erlang 应用程序相当容易扩展。你可以从一个节点将代码分发到多个节点，分发到局域网内多台机器上，甚至分发到其他网络的服务器上，而只需要额外一点点代码。这是因为：</p>
+
+<blockquote><ul>
+<li>Erlang 允许你在远程节点上创建进程</li>
+<li>Erlang 允许你用如同跟本地进程交互一样的方式，与远程进程进行交互</li>
+</ul>
+</blockquote>
+
+<p>对前面的程序稍加改动 (添加一个函数), 我们就能够将其分发到 2 个 Erlang 节点上去：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">register</span><span class="p">(</span><span class="o">?</span><span class="nv">MODULE</span><span class="p">,</span> <span class="nb">spawn</span><span class="p">(</span><span class="k">fun</span> <span class="n">loop</span><span class="o">/</span><span class="mi">0</span><span class="p">)).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>➜  Erlang-programming-examples  erl -sname weasley
+</span><span class='line'>Erlang R16B <span class="o">(</span>erts-5.10.1<span class="o">)</span> <span class="o">[</span><span class="nb">source</span><span class="o">]</span> <span class="o">[</span>64-bit<span class="o">]</span> <span class="o">[</span>smp:8:8<span class="o">]</span> <span class="o">[</span>async-threads:10<span class="o">]</span> <span class="o">[</span>hipe<span class="o">]</span> <span class="o">[</span>kernel-poll:false<span class="o">]</span> <span class="o">[</span>dtrace<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>Eshell V5.10.1  <span class="o">(</span>abort with ^G<span class="o">)</span>
+</span><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>1&gt; c<span class="o">(</span>echo_server<span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,echo_server<span class="o">}</span>
+</span><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>2&gt; echo_server:start<span class="o">()</span>.
+</span><span class='line'><span class="nb">true</span>
+</span><span class='line'>
+</span><span class='line'>➜  Erlang-programming-examples  erl -sname potter
+</span><span class='line'>Erlang R16B <span class="o">(</span>erts-5.10.1<span class="o">)</span> <span class="o">[</span><span class="nb">source</span><span class="o">]</span> <span class="o">[</span>64-bit<span class="o">]</span> <span class="o">[</span>smp:8:8<span class="o">]</span> <span class="o">[</span>async-threads:10<span class="o">]</span> <span class="o">[</span>hipe<span class="o">]</span> <span class="o">[</span>kernel-poll:false<span class="o">]</span> <span class="o">[</span>dtrace<span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>Eshell V5.10.1  <span class="o">(</span>abort with ^G<span class="o">)</span>
+</span><span class='line'><span class="o">(</span>potter@cnrd-tchen-mbp<span class="o">)</span>1&gt; rpc:call<span class="o">(</span><span class="s1">&#39;weasley@cnrd-tchen-mbp&#39;</span>, echo_server, rpc, <span class="o">[{</span>message, <span class="s2">&quot;Hurry up, Harry!&quot;</span><span class="o">}])</span>.
+</span><span class='line'><span class="o">{</span>ok,<span class="s2">&quot;Hurry up, Harry!&quot;</span><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>热更新</h2>
+
+<p>这是每个系统程序员梦寐以求的特性啊！看看你为客户提供的那些实现起来单调乏味的所谓 <code>热补丁</code> 的解决方案，不断的删改，看起来又很不得体，有着很大的局限性。但是 Erlang 正好相反，她yi yi zhongsupports hot code reload in an elegant manner.</p>
+
+<p>沿用前面的例子，我们通过修改一点代码以便待会能够动态更新运行中的代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">echo_server_general</span><span class="p">).</span>
+</span><span class='line'><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">rpc</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">swap_code</span><span class="o">/</span><span class="mi">2</span><span class="p">]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">start</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="nb">register</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nb">spawn</span><span class="p">(</span><span class="k">fun</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">loop</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">)</span> <span class="k">end</span><span class="p">)).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">swap_code</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">rpc</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="p">{</span><span class="n">swap_code</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">}).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">rpc</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Request</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="nv">Name</span> <span class="o">!</span> <span class="p">{</span><span class="n">self</span><span class="p">(),</span> <span class="nv">Request</span><span class="p">},</span>
+</span><span class='line'>    <span class="k">receive</span>
+</span><span class='line'>        <span class="p">{</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Response</span><span class="p">}</span> <span class="o">-&gt;</span> <span class="nv">Response</span>
+</span><span class='line'>    <span class="k">end</span><span class="p">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">loop</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="k">receive</span>
+</span><span class='line'>        <span class="p">{</span><span class="nv">From</span><span class="p">,</span> <span class="p">{</span><span class="n">swap_code</span><span class="p">,</span> <span class="nv">NewMod</span><span class="p">}}</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="nv">From</span> <span class="o">!</span> <span class="p">{</span><span class="nv">Name</span><span class="p">,</span> <span class="n">ack</span><span class="p">},</span>
+</span><span class='line'>            <span class="n">loop</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">NewMod</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">{</span><span class="nv">From</span><span class="p">,</span> <span class="nv">Request</span><span class="p">}</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="nv">Response</span>  <span class="o">=</span> <span class="nv">Mod</span><span class="p">:</span><span class="nf">handle</span><span class="p">(</span><span class="nv">Request</span><span class="p">),</span>
+</span><span class='line'>            <span class="nv">From</span> <span class="o">!</span> <span class="p">{</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Response</span><span class="p">},</span>
+</span><span class='line'>            <span class="n">loop</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Mod</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span><span class="p">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">echo_server</span><span class="p">).</span>
+</span><span class='line'><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">echo</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">handle</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">echo</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nn">echo_server_general</span><span class="p">:</span><span class="nf">rpc</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="p">{</span><span class="n">echo</span><span class="p">,</span> <span class="nv">Message</span><span class="p">}).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">handle</span><span class="p">({</span><span class="n">echo</span><span class="p">,</span> <span class="nv">Message</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="nv">Message</span><span class="p">}.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>1&gt; echo_server_general:start<span class="o">(</span>s, echo_server<span class="o">)</span>.
+</span><span class='line'><span class="nb">true</span>
+</span><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>2&gt; echo_server:echo<span class="o">(</span>s, <span class="s2">&quot;hello world&quot;</span><span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,<span class="s2">&quot;hello world&quot;</span><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>现在新需求来了——回显服务器需要把消息的首字母转换成大写形式再回显发送。一般情况下，我们需要停掉服务器程序，替换代码，然后重启服务器。但在 Erlang 中，不需要这么麻烦。</p>
+
+<p>代码修改：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">echo_server</span><span class="p">).</span>
+</span><span class='line'><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">echo</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">handle</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">echo</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nn">echo_server_general</span><span class="p">:</span><span class="nf">rpc</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="p">{</span><span class="n">echo</span><span class="p">,</span> <span class="nv">Message</span><span class="p">}).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">handle</span><span class="p">({</span><span class="n">echo</span><span class="p">,</span> <span class="nv">Message</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="n">ok</span><span class="p">,</span> <span class="n">capfirst</span><span class="p">(</span><span class="nv">Message</span><span class="p">)}.</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">capfirst</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">])</span> <span class="k">when</span> <span class="nv">H</span> <span class="o">&gt;=</span> <span class="sc">$a</span><span class="p">,</span> <span class="nv">H</span> <span class="o">=&lt;</span> <span class="sc">$z</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="p">[</span><span class="nv">H</span> <span class="o">+</span> <span class="p">(</span><span class="sc">$A</span> <span class="o">-</span> <span class="sc">$a</span><span class="p">)|</span><span class="nv">T</span><span class="p">];</span>
+</span><span class='line'><span class="nf">capfirst</span><span class="p">(</span><span class="nv">Others</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Others</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>运行：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>4&gt; c<span class="o">(</span>echo_server<span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,echo_server<span class="o">}</span>
+</span><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>5&gt; echo_server_general:swap_code<span class="o">(</span>s, echo_server<span class="o">)</span>.
+</span><span class='line'>ack
+</span><span class='line'><span class="o">(</span>weasley@cnrd-tchen-mbp<span class="o">)</span>6&gt; echo_server:echo<span class="o">(</span>s, <span class="s2">&quot;hello world&quot;</span><span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,<span class="s2">&quot;Hello world&quot;</span><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>热更新的特性不仅对于有着高可用性要求的服务非常有用，对于软件的开发生命周期同样很有帮助。你不需要浪费许多时间在停服，更新程序，然后重启这种事情上，而且有时候仅仅只是更新了很少量的几行代码而已。</p>
+
+<p>我看过几篇声称热更新在现实中并不是很有用的文章，他们担心热更新的方式会带来模块版本管理上的混乱。这是可以理解的，人们对于未知的事物，对于超出其知识范围和视野的事物，总会有恐惧心理的。（我相信）10年以后，当有相应的软件管理工具和理论问世以后，热更新的强大之处将会彰显出来。（我只能说）Erlang 是如此的前卫，以致于在她问世 20 多年之后，她的设计哲学仍然领先于当今时代。</p>
+
+<h2>容错机制</h2>
+
+<p>高达 <code>nine nines</code>（99.9999999%）的系统可用性是软件工业一直在追求的目标。然后，人总是会犯错的，其创造出来的软件当然也免不了出错。<code>墨菲法则</code> 说，任何可能出错的事终将出错。认识到我们终将无法避免错误，那么最重要的问题就是：软件如何健壮地应对错误（并继续正常运作）？</p>
+
+<p>其他的一些语言鼓励程序员使用防御性的编程策略来保证程序不致因为某些错误而奔溃，但 Erlang 的思想则是 “<code>让它奔溃吧</code>” ！这是为何？</p>
+
+<p>如果为你建造的房子是这样的，只要某个窗户坏掉了整栋房子就会倒塌，你会住进去吗？答案是显而易见的！你需要的房子应该在这种情况下仍然可以安全居住，稍后叫人来修窗户就行了。</p>
+
+<p>这就是用 C 和 Erlang 编写的程序之间的区别。只要知道如何从错误中恢复，软件出错就不是一个多么严重的问题了。在 Erlang 里：</p>
+
+<blockquote><ul>
+<li>一个进程的奔溃不会影响到其他不相关的进程</li>
+<li>一个进程出错以后在退出前，会向与它关联的进程发送通知（hey，我要退出了！）</li>
+<li>可以使用监控者来恢复奔溃的程序，比如重启进程。</li>
+</ul>
+</blockquote>
+
+<h2>速度</h2>
+
+<p>与 C 语言相比，Erlang 代码在性能上有几点劣势：</p>
+
+<blockquote><ul>
+<li>代码运行于虚拟机之上</li>
+<li>运行时类型推导</li>
+<li>模式匹配</li>
+<li>其他&hellip;</li>
+</ul>
+</blockquote>
+
+<p>那么 Erlang 到底有多慢？参考<a href="http://stackoverflow.com/questions/6964392/speed-comparison-with-project-euler-c-vs-python-vs-Erlang-vs-haskell">这篇文章</a>，我在自己的mbp上做了如下测试：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>➜  comparison  <span class="nb">time</span> ./euler12.bin
+</span><span class='line'>842161320
+</span><span class='line'>./euler12.bin  5.90s user 0.01s system 99% cpu 5.910 total
+</span><span class='line'>➜  comparison  <span class="nb">time </span>erl -noshell -s euler12 solve
+</span><span class='line'>842161320
+</span><span class='line'>erl -noshell -s euler12 solve  11.09s user 0.19s system 100% cpu 11.269 total
+</span><span class='line'>➜  comparison  <span class="nb">time </span>pypy euler12.py
+</span><span class='line'>842161320
+</span><span class='line'>pypy euler12.py  9.92s user 0.05s system 96% cpu 10.305 total
+</span><span class='line'>➜  comparison  <span class="nb">time</span> ./euler12.py
+</span><span class='line'>842161320
+</span><span class='line'>./euler12.py  66.32s user 0.04s system 99% cpu 1:06.43 total
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到，C 代码几乎比 Erlang 快了 1 倍。（但是）考虑到 Erlang 带来的好处，这已经是很不错的数据了。想想 （Erlang 所擅长的）I/O 密集型、并发/分布式场景，Erlang 毫无疑问地胜出了。</p>
+
+<p>虽然现在 Erlang 在性能上无法超越 C，但将来单个芯片裸片（DIE）上有成百上千个核的时候，这一天会到来的。</p>
+
+<h2>应用</h2>
+
+<p>有不少著名的软件是基于 Erlang 开发的：</p>
+
+<blockquote><ul>
+<li><a href="http://couchdb.apache.org/">CouchDB</a>. 一个 NoSql 数据库。</li>
+<li><a href="http://www.rabbitmq.com/">RabbitMQ</a>. 一个分布式消息队列系统。</li>
+<li><a href="http://www.ejabberd.im/">ejabberd</a>. 一个即时通信服务器。</li>
+<li><a href="http://www.adelcogroup.com/EricssonAXD301.htm">AXD301 ATM switch</a>. 这很可能是世界上唯一一个能够达到 <code>nine nines</code> 可用性的系统了，它已经连续正常运行了超过 20 年！</li>
+<li>还有很多其他的公司，包括 <code>Amazon</code>, <code>Facebook</code>, <code>Yahoo!</code>, <code>T-Mobile</code> 等，都在他们的系统中使用了 Erlang，参考 <a href="http://stackoverflow.com/questions/1636455/where-is-Erlang-used-and-why">Where is Erlang used and why?</a></li>
+</ul>
+</blockquote>
+
+<hr />
+
+<h1>如何学习 Erlang</h1>
+
+<p>Erlang 学习起来确实相当困难，但是一旦你掌握了她，你就是 <code>the king</code>。我很欣赏下面这段话，摘自著名 Erlang Web MVC 框架 <a href="http://www.chicagoboss.org/ng-used-and-why">Chicago Boss</a> 的作者 Evan Miller 撰写的一篇名为 <a href="http://www.evanmiller.org/joy-of-erlang.html">Joy of erlang</a> 的文章：</p>
+
+<blockquote><ul>
+<li>In the movie Avatar, there&rsquo;s this big badass bird-brained pterodactyl thing called a Toruk that the main character must learn to ride in order to regain the trust of the blue people. As a general rule, Toruks do not like to be ridden, but if you fight one, subdue it, and then link your Blue Man ponytail to the Toruk&rsquo;s ptero-tail, you get to own the thing for life. Owning a Toruk is awesome; it&rsquo;s like owning a flying car you can control with your mind, which comes in handy when battling large chemical companies, impressing future colleagues, or delivering a pizza. But learning to ride a Toruk is dangerous, and very few people succeed.</li>
+</ul>
+</blockquote>
+
+<p><img src="http://tchen.me/assets/files/snapshots/toruk.jpg" alt="阿凡达" /></p>
+
+<p>这段话生动地反映了我学习 Erlang 的困难程度。顺便说一句，我距离攻克她还远着呢～～～</p>
+
+<p>在学习 Erlang 之前，我熟练掌握了 C、Python 和 Javascript，对 C++、Java 和 Ruby 也有所涉略。我的思维也是早已习惯了命令式编程，因此最大的挑战就是要去适应函数式编程，这需要做出思维上巨大的转变。</p>
+
+<h2>变量不变</h2>
+
+<p>变量只能绑定某个值，而无法更改，这让我突然间不会编程了！
+举个例子，要求在不使用任何辅助函数（例如map）的情况下实现 upper(str) 函数。</p>
+
+<p>在 Python 中这简直太简单且直接了：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='py'><span class='line'><span class="k">def</span> <span class="nf">upper</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+</span><span class='line'>    <span class="n">str1</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">str1</span> <span class="o">+=</span> <span class="n">c</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">str1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是在 Erlang 中，无法改变变量的值，该如何实现呢？
+诀窍在于一个累积器的概念，下面这个范例，请在以后编写 Erlang 程序的时候时刻记着。代码看起来是这样的：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">upper</span><span class="p">(</span><span class="nv">S</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">upper</span><span class="p">(</span><span class="nv">S</span><span class="p">,</span> <span class="p">[]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">upper</span><span class="p">([],</span> <span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="nn">lists</span><span class="p">:</span><span class="nf">reverse</span><span class="p">(</span><span class="nv">N</span><span class="p">);</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">],</span> <span class="nv">N</span><span class="p">)</span> <span class="k">when</span> <span class="nv">H</span> <span class="o">&gt;</span> <span class="sc">$a</span><span class="p">,</span> <span class="nv">H</span> <span class="o">=&lt;</span> <span class="sc">$z</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">upper</span><span class="p">(</span><span class="nv">T</span><span class="p">,</span> <span class="p">[</span><span class="nv">H</span> <span class="o">+</span> <span class="p">(</span><span class="sc">$A</span> <span class="o">-</span> <span class="sc">$a</span><span class="p">)|</span><span class="nv">N</span><span class="p">]);</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">],</span> <span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">upper</span><span class="p">(</span><span class="nv">T</span><span class="p">,</span> <span class="p">[</span><span class="nv">H</span><span class="p">|</span><span class="nv">N</span><span class="p">]).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个函数本身不包含任何内部变量的状态改变，但我们使用一个通过参数传入的累积器，实现了同样的功能。这是函数式编程里面的一个很基础的范例，理解并记住它，要么请放弃 Erlang。</p>
+
+<h2>模式匹配</h2>
+
+<p>模式匹配使得 Erlang 程序看起来既优雅又易于理解。</p>
+
+<p>在 C 语言中，一个函数在它的作用域中必须是唯一的，你不能定义了一个函数 <code>fun(x)</code>，再定义一个函数 <code>fun(x,y)</code>，但在 Erlang 中就没有这个限制了。你可以随意定义多个（同名）函数，只要它们的参数是不一样的，你也可以为一个函数定义多个子句，只要它们匹配的模式不同。</p>
+
+<p>仍旧以上面的 <code>upper()</code> 函数为例，调用 <code>upper("#hello")</code> 时:</p>
+
+<blockquote><ul>
+<li>由于只有一个参数，该调用匹配 <code>upper(S)</code>，因此接着调用 <code>upper("#hello", [])</code></li>
+<li><code>"#hello"</code> 不匹配 <code>[]</code>，并且第一个字符  <code>"#"</code> 不匹配 guard 条件，故调用 <code>upper("#hello", [])</code> 匹配 <code>upper([H|T], N)</code>，因此接着调用 <code>upper("hello", [$#])</code></li>
+<li>接下来的各个调用匹配 <code>upper([H|T], N) when H &gt; $a, H =&lt; $z</code>，每个调用将一个字符转换为大写，调用序列为：</li>
+</ul>
+</blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">upper</span><span class="p">(</span><span class="s">&quot;ello&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sc">$H</span><span class="p">,</span> <span class="sc">$#</span><span class="p">])</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">(</span><span class="s">&quot;llo&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sc">$E</span><span class="p">,</span> <span class="sc">$H</span><span class="p">,</span> <span class="sc">$#</span><span class="p">])</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">(</span><span class="s">&quot;lo&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sc">$L</span><span class="p">,</span> <span class="sc">$E</span><span class="p">,</span> <span class="sc">$H</span><span class="p">,</span> <span class="sc">$#</span><span class="p">])</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">(</span><span class="s">&quot;o&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sc">$L</span><span class="p">,</span> <span class="sc">$L</span><span class="p">,</span> <span class="sc">$E</span><span class="p">,</span> <span class="sc">$H</span><span class="p">,</span> <span class="sc">$#</span><span class="p">])</span>
+</span><span class='line'><span class="nf">upper</span><span class="p">([],</span> <span class="p">[</span><span class="sc">$O</span><span class="p">,</span> <span class="sc">$L</span><span class="p">,</span> <span class="sc">$L</span><span class="p">,</span> <span class="sc">$E</span><span class="p">,</span> <span class="sc">$H</span><span class="p">,</span> <span class="sc">$#</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><ul>
+<li>最后，<code>upper([], [$O, $L, $L, $E, $H, $#])</code> 匹配 <code>upper([], N), lists:reverse(N)</code></li>
+</ul>
+</blockquote>
+
+<p>模式匹配让你能够将代码逻辑进行分拆，这使得函数的每个子句变得更小、更具可读性。这就是为什么我们经常可以看到 C 函数动辄超过 100 行代码，而 Erlang 函数通常不会超过 20 行的原因。</p>
+
+<h2>递归魔法</h2>
+
+<p>学习 C 编程的时候，我被告知 <code>递归是有害的</code>，应当尽可能避免使用它。但在函数式编程的世界里，完全就是另外一回事了。</p>
+
+<p>回头看看上文的所有代码，你有看到循环语句吗？没有。递归函数呢？到处都是。在需要迭代或递归的场景里，递归取代了 <code>for/while</code> 循环，代码看起来非常简洁。为什么会是这样呢？回想一下 C 语言的 <code>for</code> 循环，其实包含了状态改变，每次循环里修改迭代器的值，直到它满足了退出的条件，跳出循环。但 Erlang 不允许内部状态的改变，所以她使用递归取代了通常的 <code>for/while</code> 循环。</p>
+
+<p>但是，对此你心有疑虑&hellip;</p>
+
+<h3>递归的性能很差</h3>
+
+<p>这其实是一个 <code>伪命题</code>。</p>
+
+<p>让我举个例子。我们通常认为，通过寄存器传递参数要远比通过堆栈传递快得多，函数调用中，Intel CPU 由于缺少足够的通用寄存器（相比较RISC CPU），因此它非常依赖堆栈的 <code>push/pop</code> 操作。为了提高性能它引入了寄存器栈，这让 <code>push/pop</code> 操作变得和操作寄存器一样快。</p>
+
+<p>让我们看回递归，我们在 C 中很少使用递归，并且根据 <code>80/20</code> 法则（什么意思？），没有必要马上对递归进行优化，对吧？而对 Erlang 而言，递归就是代码的生命，编译器岂敢不对其进行优化！所以说吧，你的直觉是不对的 —— 递归并非天生就是很慢的，在 C 里面它确实慢，但在 Erlang 里，它非常快。</p>
+
+<h3>递归很容易导致堆栈溢出</h3>
+
+<p>这个论断也并不十分准确，如果你以正确的方式编写程序的话。在递归中 Erlang 对堆栈操作做了优化，尤其是尾递归。举例说明：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="k">when</span> <span class="nv">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="nv">N</span> <span class="o">*</span> <span class="n">fac</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这不是一个尾递归，因为堆栈数据必须保存下来做进一步计算。让我们把它改成尾递归的版本：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">fac1</span><span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fac1</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">fac1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">M</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">M</span><span class="p">;</span>
+</span><span class='line'><span class="nf">fac1</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">M</span><span class="p">)</span> <span class="k">when</span> <span class="nv">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">fac1</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">N</span> <span class="o">*</span> <span class="nv">M</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>每进行一次递归调用，我们都能够安全地把上一次递归调用产生的堆栈数据丢弃，这就是尾递归。尾递归的好处是，你只需要保存少量并且固定大小的内存数据，所以不需要担心长时间运行的递归程序会有堆栈溢出的问题。</p>
+
+<p>在 Erlang 里你可以尽可能地使用尾递归编程。</p>
+
+<h2>函数式编程</h2>
+
+<p>特别关注一下那些可以被递归访问的数据，例如 list（包括string），list 可以做如下处理：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="nf">retrieve</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="nv">H</span><span class="p">,</span> <span class="nv">T</span><span class="p">}.</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">%% or even</span>
+</span><span class='line'><span class="nf">retrieve1</span><span class="p">([</span><span class="nv">H1</span><span class="p">,</span> <span class="nv">H2</span><span class="p">|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="nv">H1</span><span class="p">,</span> <span class="nv">H2</span><span class="p">,</span> <span class="nv">T</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>请牢记 map/reduce 的概念。</p>
+
+<p>对于算法问题，想一想如何通过数学公式来实现它，如果落地到了具体的数学公式了，那么这样的问题应该很容易用 Erlang 来编程解决。分而治之，不要被细节问题所迷惑。</p>
+
+<p>我们用 atoi(S) 函数为例，公式如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>     <span class="p">|</span>- S<span class="o">[</span>0<span class="o">]</span> is <span class="s1">&#39;-&#39;</span>:  -1 * atoi<span class="o">(</span>S<span class="o">[</span>1:<span class="o">]</span>, 0<span class="o">)</span>
+</span><span class='line'>atoi<span class="o">(</span>S<span class="o">)</span> -+
+</span><span class='line'>     <span class="p">|</span>- <span class="k">else</span>:         atoi<span class="o">(</span>S, 0<span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="p">|</span>- S is <span class="o">[]</span>:       Acc
+</span><span class='line'>atoi<span class="o">(</span>S, Acc<span class="o">)</span> -+- S<span class="o">[</span>X<span class="o">]</span> is digit: atoi<span class="o">(</span>S<span class="o">[</span>X+1:<span class="o">]</span>, <span class="m">10</span> * Acc + digit<span class="o">(</span>S<span class="o">))</span>
+</span><span class='line'>          <span class="p">|</span>- <span class="k">else</span>:          Acc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>实现代码例子如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">math</span><span class="p">).</span>
+</span><span class='line'><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">atoi</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">atoi</span><span class="p">([</span><span class="sc">$-</span><span class="p">|</span><span class="nv">S</span><span class="p">])</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">atoi</span><span class="p">(</span><span class="nv">S</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="nf">atoi</span><span class="p">(</span><span class="nv">S</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">atoi</span><span class="p">(</span><span class="nv">S</span><span class="p">,</span> <span class="mi">0</span><span class="p">).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">atoi</span><span class="p">([],</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Acc</span><span class="p">;</span>
+</span><span class='line'><span class="nf">atoi</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">],</span> <span class="nv">Acc</span><span class="p">)</span> <span class="k">when</span> <span class="nv">H</span> <span class="o">&gt;=</span> <span class="sc">$0</span><span class="p">,</span> <span class="nv">H</span> <span class="o">=&lt;</span> <span class="sc">$9</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="n">atoi</span><span class="p">(</span><span class="nv">T</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="nv">Acc</span> <span class="o">+</span> <span class="p">(</span><span class="nv">H</span> <span class="o">-</span> <span class="sc">$0</span><span class="p">));</span>
+</span><span class='line'><span class="nf">atoi</span><span class="p">(_</span><span class="nv">S</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Acc</span><span class="p">.</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>比较一下 atoi() 函数的 C 实现，Erlang 的实现版本更直观反映了其算法逻辑，你几乎能一次就编写出正确的代码。</p>
+
+<h2>拥抱进程</h2>
+
+<p>进程使用起来并不难，它以一种结构相对松散的、异步的方式组织起你的系统。你只需要去习惯它，将它当作一个 worker，一个 object，或者其他类似的东西。</p>
+
+<h2>让它出错吧</h2>
+
+<p>C 程序员通常需要在编程时考虑覆盖尽可能多的参数值条件，而 Erlang 程序员则不需要如此，看这个例子：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='erlang'><span class='line'><span class="c">%% good code</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="k">when</span> <span class="nb">is_integer</span><span class="p">(</span><span class="nv">N</span><span class="p">),</span> <span class="nv">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Acc</span><span class="p">;</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fac</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Acc</span> <span class="o">*</span> <span class="nv">N</span><span class="p">).</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">%% bad code</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">)</span> <span class="k">when</span> <span class="nb">is_integer</span><span class="p">(</span><span class="nv">N</span><span class="p">),</span> <span class="nv">N</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="n">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">)</span>                           <span class="o">-&gt;</span> <span class="p">{</span><span class="n">error</span><span class="p">,</span> <span class="s">&quot;argument must be positive integer&quot;</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Acc</span><span class="p">;</span>
+</span><span class='line'><span class="nf">fac</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fac</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">Acc</span> <span class="o">*</span> <span class="nv">N</span><span class="p">).</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>用非法参数调用第一段代码将会导致异常：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>1&gt; c<span class="o">(</span>math<span class="o">)</span>.
+</span><span class='line'><span class="o">{</span>ok,math<span class="o">}</span>
+</span><span class='line'>2&gt; math:fac<span class="o">(</span>10<span class="o">)</span>.
+</span><span class='line'>3628800
+</span><span class='line'>3&gt; math:fac<span class="o">(</span>-10<span class="o">)</span>.
+</span><span class='line'>** exception error: no <span class="k">function</span> clause matching math:fac<span class="o">(</span>-10<span class="o">)</span> <span class="o">(</span>math.erl, line 14<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我们需要为负数的情况编写代码吗？C 程序需要，Erlang 不需要！用负数调用时，第二段代码使得程序得以继续运行，但是给调用者增加了不必要的处理，调用者需要为此添加额外的代码，给程序徒增复杂性。还是直接让进程退出吧，我们只在真正需要异常处理的场景里为此操心就行了。</p>
+
+<hr />
+
+<h1>Erlang 学习资料</h1>
+
+<p>恭喜你！读完了这篇文章，你将可以开始学习驯服属于你的那只 Toruk了，下面是对你很有帮助的一些 <code>武器</code>：</p>
+
+<blockquote><ul>
+<li><strong>Joe Armstrong</strong> 的经典之作 《 <strong>Programming Erlang - software for a concurrent world</strong> 》。学习一门语言最好的途径是阅读该门语言作者的作品，我力荐你好好读一读这本书，尤其是里面有关 <code>顺序编程</code>、<code>并发编程</code> 和 <code>OTP</code> 的章节。</li>
+<li><a href="http://www.erlang.org/doc/">Erlang doc</a>。有任何疑问时作为参考。</li>
+<li>用 Erlang 编程解决你日常工作中遇到的问题，以下例子可供参考：
+
+<ul>
+<li>给定一个文件，计算经典的 wordcount</li>
+<li>实现 cloc (给定一个目录，计算不同语言的代码行数)</li>
+<li>编写一个消息服务器，将 topN 未读消息保存在内存，其余的保存在 mnesia 中</li>
+<li>编写一个 markdown 格式解析器</li>
+<li>基于 mochiweb 编写一个 web 框架</li>
+<li>编写一个 L3/L4 防火墙软件用于处理 handles symmetric NAT translation (to focus on the problem itself you should use the data from tcpdump).</li>
+</ul>
+</li>
+<li>阅读开源项目代码，例如 ranch, cowboy, boss_db, 等等。</li>
+</ul>
+</blockquote>
+
+<p>Hope you have fun!</p>
+
+<hr />
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Understanding # and ## in C/C++]]></title>

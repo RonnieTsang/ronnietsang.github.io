@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Language | RonnieTsang's Blog]]></title>
-  <link href="http://RonnieTsang.github.io/blog/categories/language/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Erlang | RonnieTsang's Blog]]></title>
+  <link href="http://RonnieTsang.github.io/blog/categories/erlang/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
   <updated>2014-10-03T09:52:39+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
@@ -551,133 +551,6 @@ fac(N, Acc) -&gt; fac(N-1, Acc * N).
 <p>Hope you have fun!</p>
 
 <hr />
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Understanding # and ## in C/C++]]></title>
-    <link href="http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus/"/>
-    <updated>2014-09-15T00:09:19+08:00</updated>
-    <id>http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus</id>
-    <content type="html"><![CDATA[<p>这两个符号在 C/C++ 语言中属于<code>编译器预处理</code>的范畴，属于编译期概念（而非运行期概念）</p>
-
-<p><strong><code>##</code>连接符</strong> 的功能是在带参数的宏定义中将两个子串(token)连接起来，从而形成一个新的子串。但它不可以是第一个或者最后一个子串</p>
-
-<p><code>所谓的子串就是指编译器能够识别的最小语法单元。具体的定义在编译原理里面有详尽解释，但不知道也无所谓</code></p>
-
-<p><strong><code>#</code>连接符</strong> 的功能是把传递过来的参数当成字符串进行替代，即所谓 <code>字符串化</code></p>
-
-<!-- more -->
-
-
-<h2>实例说明</h2>
-
-<p>假设程序中已经定义了这样一个带参数的宏：</p>
-
-<pre><code class="c">#define paster(n) printf("token" #n " = %d", token##n)
-</code></pre>
-
-<p>同时又定义了一个整型变量：</p>
-
-<pre><code class="c">int token9 = 9;
-</code></pre>
-
-<p>现在在主程序中以下面的方式调用这个宏：</p>
-
-<pre><code class="c">paster(9);
-</code></pre>
-
-<p>那么在编译时，上面的这句话被扩展为：</p>
-
-<pre><code class="c">printf("token" "9" " = %d", token9);
-</code></pre>
-
-<p>运行结果自然就是：</p>
-
-<pre><code class="sh">$ token9 = 9
-</code></pre>
-
-<h2>小记</h2>
-
-<pre><code class="sh">## -- 连接两个参数
-#  -- 字符串化
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Understanding Infix Notation in OC]]></title>
-    <link href="http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc/"/>
-    <updated>2014-09-12T17:19:20+08:00</updated>
-    <id>http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc</id>
-    <content type="html"><![CDATA[<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
-
-<p>声明：</p>
-
-<pre><code class="c">@interface C : NSObject
-+(int) fun: (int) a second: (int) b;
-</code></pre>
-
-<p>定义：</p>
-
-<pre><code class="c">@implementation C
-+(int) fun: (int) a second: (int) b
-{
-    return a * b;
-}
-@end
-</code></pre>
-
-<p>调用：</p>
-
-<pre><code class="c">int a = [C fun: 2 second: 3];
-</code></pre>
-
-<p>书上说这种语法称为中缀符的形式，我的疑问是：</p>
-
-<blockquote><ul>
-<li><code>fun</code> 应该就是方法名吧？那 <code>second</code> 理解为什么？</li>
-<li>如果 <code>second</code> 理解为第二个参数的名字，那 <code>b</code> 又是什么？同时 <code>fun</code> 又是什么？</li>
-</ul>
-</blockquote>
-
-<!-- more -->
-
-
-<p>好吧我的问题也许有些奇怪，对于一个习惯了 C/C++ 等“正常”语法的人来说，一时没转过弯来。一番 <code>gb</code> 之后，参考了多人的说法，算是基本理解了 OC 的方法参数名。</p>
-
-<p>整理如下：</p>
-
-<blockquote><ul>
-<li><strong>方法修饰符</strong></li>
-</ul>
-</blockquote>
-
-<ol>
-<li><code>-</code> 代表此方法是<code>实例方法</code>，必须先生成类实例，通过实例才能调用该方法</li>
-<li><code>+</code> 代表此方法是类的<code>静态方法</code>，可以直接调用，而不用生成类实例</li>
-</ol>
-
-
-<blockquote><ul>
-<li><strong>参数类型</strong></li>
-</ul>
-</blockquote>
-
-<p>  a 与 b 分别是两个参数，均为 int 类型</p>
-
-<blockquote><ul>
-<li><strong>方法签名</strong></li>
-</ul>
-</blockquote>
-
-<p>  本例中，fun 和 second 组成了该方法的签名关键字。不过还是有些怪异，这样理解吧，第一个参数是没有参数名的，<strong>如果硬要说有，那就是方法名</strong>，统一说来，见到冒号，冒号前面那个就是参数名</p>
-
-<p>再举例，也可以编写没有参数名的方法定义与调用：</p>
-
-<pre><code class="c">+(int) fun: (int) a: (int) b;
-int a = [C fun: 2: 3];
-</code></pre>
 ]]></content>
   </entry>
   
