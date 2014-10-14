@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Writing a Hive Generic UDF"
+title: "如何编写一个Hive Generic UDF"
 date: 2014-09-05 05:40:22 +0800
 comments: true
 categories: hive

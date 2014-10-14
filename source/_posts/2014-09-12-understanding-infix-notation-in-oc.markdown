@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Understanding Infix Notation in OC"
+title: "理解Objective-C中缀符"
 date: 2014-09-12 17:19:20 +0800
 comments: true
 categories: Objective-C Language
 ---
 
-初学 OC ，对其方法的声明语法感到很奇怪。比如：
+初学 Objective-C ，对其方法的声明语法感到很奇怪。比如：
 
 声明：
 

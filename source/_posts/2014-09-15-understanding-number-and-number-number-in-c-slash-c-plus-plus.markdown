@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Understanding # and ## in C/C++"
+title: "理解C/C++中的#和##操作符"
 date: 2014-09-15 00:09:19 +0800
 comments: true
 categories: C/C++ Language 

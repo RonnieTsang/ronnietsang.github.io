@@ -1,12 +1,10 @@
 ---
 layout: post
-title: "Why should C programmers learn Erlang?"
+title: "为什么每一个C程序员都应该学学Erlang"
 date: 2014-10-03 09:51:04 +0800
 comments: true
 categories: Erlang Language 
 ---
-
-标签（空格分隔）： Erlang
 
 这是一篇翻译文章，原文[在此][1]。水平有限，见笑了。
 
@@ -14,6 +12,8 @@ categories: Erlang Language
 
 你要问为什么？
 爱难道需要理由吗？当然要，翻译这篇文章，就是为了回答这个问题！
+
+<!-- more -->
 
 很可惜的是，后来由于各种原因包括工作变动，并没有继续深入学习使用过 Erlang ，仅以此文，开启重新学习 Erlang 的计划！
 
