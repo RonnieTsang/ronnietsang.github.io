@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-c | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-10-03T09:52:39+08:00</updated>
+  <updated>2014-10-14T08:42:10+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -14,11 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Understanding Infix Notation in OC]]></title>
+    <title type="html"><![CDATA[理解Objective-C中缀符]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc/"/>
     <updated>2014-09-12T17:19:20+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc</id>
-    <content type="html"><![CDATA[<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
+    <content type="html"><![CDATA[<p>初学 Objective-C ，对其方法的声明语法感到很奇怪。比如：</p>
 
 <p>声明：</p>
 

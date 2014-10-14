@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Hive | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/hive/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-10-03T09:52:39+08:00</updated>
+  <updated>2014-10-14T08:42:10+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Writing a Hive Generic UDF]]></title>
+    <title type="html"><![CDATA[如何编写一个Hive Generic UDF]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/09/05/writing-a-hive-generic-udf/"/>
     <updated>2014-09-05T05:40:22+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/05/writing-a-hive-generic-udf</id>

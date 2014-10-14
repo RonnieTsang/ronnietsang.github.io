@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>About - RonnieTsang&#8217;s Blog</title>
+  <title>计算机基础(一): 操作系统篇 &#8211; 进程间通信 - RonnieTsang&#8217;s Blog</title>
   <meta name="author" content="RonnieTsang">
 
   
-  <meta name="description" content="About Sep 15th, 2014 12:34 am I&rsquo;m Ronnie Tsang. I love SNOOKER. Sep 15th, 2014 12:34 am Article Categories c/c++ (1)
-erlang (1)
-hive (1) &hellip;">
+  <meta name="description" content="
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ hive (1) &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://RonnieTsang.github.io/about">
+  <link rel="canonical" href="http://RonnieTsang.github.io/blog/2014/10/06/computer-science-basic-1-operating-system-interprocess-communication">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="RonnieTsang's Blog" type="application/atom+xml">
@@ -64,43 +63,107 @@ hive (1) &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">About</h1>
-    <p class="meta">
-
-
-
-
-<time class='entry-date' datetime='2014-09-15T00:34:00+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:34 am</span></time></p>
-  </header>
-  
-  <h2>I&rsquo;m Ronnie Tsang. I love SNOOKER.</h2>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">计算机基础(一): 操作系统篇 &#8211; 进程间通信</h1>
+    
+    
       <p class="meta">
         
+
+
+
+
+<time class='entry-date' datetime='2014-10-06T07:14:51+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:14 am</span></time>
         
-
-
-
-
-<time class='entry-date' datetime='2014-09-15T00:34:00+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>15</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:34 am</span></time>
+          | <a href="#comments">Comments</a>
         
       </p>
+    
+  </header>
+
+
+<div class="entry-content">
+</div>
+
+
+  <footer>
+    <p class="meta">
       
-        <div class="sharing">
+  
+
+<span class="byline author vcard">Posted by <span class="fn">RonnieTsang</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-10-06T07:14:51+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>7:14 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/operatingsystem/'>operatingsystem</a>
+  
+</span>
+
+
+      
+
+    <DIV style="font-size:12px;BORDER-BOTTOM: #bbbbbb 1px solid; BORDER-LEFT: #bbbbbb 1px solid; BACKGROUND: #f6f6f6; HEIGHT: 120px; BORDER-TOP: #bbbbbb 1px solid; BORDER-RIGHT: #bbbbbb 1px solid" class=oec2003right> 
+        <DIV style="MARGIN-TOP: 10px; FLOAT: left; MARGIN-LEFT: 5px; MARGIN-RIGHT: 10px"> 
+            <IMG alt="" src="/images/ronnie.jpg" width=90 height=90>
+        </DIV> 
+        <DIV style="LINE-HEIGHT: 200%; MARGIN-TOP: 10px; COLOR: #000000"> 
+        Written by: <A href="http://lseek.me/about/">RonnieTsang</A> <BR>
+        Post at <A href="http://lseek.me/">http://lseek.me/</A> <BR>
+        欢迎转载，演绎或用于商业目的，但是必须保留原文链接 <BR>
+        </DIV>
+    </DIV>
+
+
+
+    </p>
+    
+      <div class="sharing">
   
   
   
 </div>
 
+    
+    <p class="meta">
       
-    </footer>
-  
+        <a class="basic-alignment left" href="/blog/2014/10/06/computer-science-basic-1-operating-system-process-and-thread/" title="Previous Post: 计算机基础(一): 操作系统篇 -- 进程与线程的比较">&laquo; 计算机基础(一): 操作系统篇 &#8211; 进程与线程的比较</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/10/06/computer-science-basic-1-operating-system-thread-synchronization/" title="Next Post: 计算机基础(一): 操作系统篇 -- 线程同步">计算机基础(一): 操作系统篇 &#8211; 线程同步 &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="计算机基础(一): 操作系统篇 -- 进程间通信"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"ronnietsang"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
 
 </div>
 

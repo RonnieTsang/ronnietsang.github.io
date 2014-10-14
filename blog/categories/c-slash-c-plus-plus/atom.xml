@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C/c++ | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/c-slash-c-plus-plus/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-10-03T09:52:39+08:00</updated>
+  <updated>2014-10-14T08:42:10+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Understanding # and ## in C/C++]]></title>
+    <title type="html"><![CDATA[理解C/C++中的#和##操作符]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus/"/>
     <updated>2014-09-15T00:09:19+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus</id>

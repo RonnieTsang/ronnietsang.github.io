@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Language | RonnieTsang's Blog]]></title>
   <link href="http://RonnieTsang.github.io/blog/categories/language/atom.xml" rel="self"/>
   <link href="http://RonnieTsang.github.io/"/>
-  <updated>2014-10-03T09:52:39+08:00</updated>
+  <updated>2014-10-14T08:42:10+08:00</updated>
   <id>http://RonnieTsang.github.io/</id>
   <author>
     <name><![CDATA[RonnieTsang]]></name>
@@ -14,18 +14,19 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Why Should C Programmers Learn Erlang?]]></title>
+    <title type="html"><![CDATA[为什么每一个C程序员都应该学学Erlang]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/10/03/why-should-c-programmers-learn-erlang/"/>
     <updated>2014-10-03T09:51:04+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/10/03/why-should-c-programmers-learn-erlang</id>
-    <content type="html"><![CDATA[<p>标签（空格分隔）： Erlang</p>
-
-<p>这是一篇翻译文章，原文<a href="http://tchen.me/posts/2013-07-22-why-should-c-programmers-learn-erlang.html">在此</a>。水平有限，见笑了。</p>
+    <content type="html"><![CDATA[<p>这是一篇翻译文章，原文<a href="http://tchen.me/posts/2013-07-22-why-should-c-programmers-learn-erlang.html">在此</a>。水平有限，见笑了。</p>
 
 <p>2013年底初接触 <a href="http://www.erlang.org/">Erlang</a> ，真的被她震撼到了！虽然一开始很不习惯其语法和变量只能绑定不能改变值等各种新奇的东西，写起代码来也很别扭，但是通过一天的接触学习，毫不夸张地说，我爱上她了。</p>
 
 <p>你要问为什么？
 爱难道需要理由吗？当然要，翻译这篇文章，就是为了回答这个问题！</p>
+
+<!-- more -->
+
 
 <p>很可惜的是，后来由于各种原因包括工作变动，并没有继续深入学习使用过 Erlang ，仅以此文，开启重新学习 Erlang 的计划！</p>
 
@@ -555,7 +556,7 @@ fac(N, Acc) -&gt; fac(N-1, Acc * N).
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Understanding # and ## in C/C++]]></title>
+    <title type="html"><![CDATA[理解C/C++中的#和##操作符]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus/"/>
     <updated>2014-09-15T00:09:19+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/15/understanding-number-and-number-number-in-c-slash-c-plus-plus</id>
@@ -606,11 +607,11 @@ fac(N, Acc) -&gt; fac(N-1, Acc * N).
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Understanding Infix Notation in OC]]></title>
+    <title type="html"><![CDATA[理解Objective-C中缀符]]></title>
     <link href="http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc/"/>
     <updated>2014-09-12T17:19:20+08:00</updated>
     <id>http://RonnieTsang.github.io/blog/2014/09/12/understanding-infix-notation-in-oc</id>
-    <content type="html"><![CDATA[<p>初学 OC ，对其方法的声明语法感到很奇怪。比如：</p>
+    <content type="html"><![CDATA[<p>初学 Objective-C ，对其方法的声明语法感到很奇怪。比如：</p>
 
 <p>声明：</p>
 
