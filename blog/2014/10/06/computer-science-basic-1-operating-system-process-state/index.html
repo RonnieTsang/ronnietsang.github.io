@@ -9,7 +9,7 @@
   <meta name="author" content="RonnieTsang">
 
   
-  <meta name="description" content="一、进程基本状态 不同的操作系统对进程的状态解释不同，但是最基本的状态都是一样的。包括一下三种： 执行态（Running）：进程占用CPU，并在CPU上运行；
+  <meta name="description" content="一、进程基本状态 不同的操作系统对进程的状态解释不同，但是最基本的状态都是一样的。包括以下三种： 执行态（Running）：进程占用CPU，并在CPU上运行；
 就绪态（Ready）：进程已经具备运行条件，但是CPU还没有分配过来；
 阻塞态（Blocked）：进程因等待某件事发生而暂时不能运行 &hellip;">
   
@@ -88,7 +88,7 @@
 
 <div class="entry-content"><h2>一、进程基本状态</h2>
 
-<p>不同的操作系统对进程的状态解释不同，但是最基本的状态都是一样的。包括一下三种：</p>
+<p>不同的操作系统对进程的状态解释不同，但是最基本的状态都是一样的。包括以下三种：</p>
 
 <blockquote><ul>
 <li><strong>执行态</strong>（Running）：进程占用CPU，并在CPU上运行；</li>
@@ -259,7 +259,7 @@
 
 <hr />
 
-<h2>Linux 进程的初始状态</h2>
+<h2>三、<strong>Linux 进程的初始状态</strong></h2>
 
 <p>进程是通过 fork 系列的系统调用（fork、clone、vfork）来创建的，内核（或内核模块）也可以通过 kernel_thread 函数创建内核进程。</p>
 
@@ -271,7 +271,7 @@
 
 <hr />
 
-<h2>Linux 进程状态变迁</h2>
+<h2>四、<strong>Linux 进程状态变迁</strong></h2>
 
 <p>进程自创建以后，状态可能发生一系列的变化，直到进程退出。而尽管进程状态有好几种，但是进程状态的变迁却只有两个方向：从 <code>TASK_RUNNING状态</code> 变为 <code>非TASK_RUNNING状态</code> 、或者从 <code>非TASK_RUNNING状态</code> 变为 <code>TASK_RUNNING状态</code>。</p>
 
